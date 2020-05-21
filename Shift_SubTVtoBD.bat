@@ -13,9 +13,18 @@ set template=template_clean.ass
 REM ######################
 :anew
 set /p srcname=TV-Source (e.g. TestTV.mkv): 
+set scriptname=%srcname%
+echo Leave empty when the subs are already muxed as a .ass and primary subtitle track with the TV version
 set /p scriptname=TV-Subtitle (e.g. TestTV.ass): 
 set /p dstname=BD-Source (e.g. TestBD.mkv): 
 echo.
+
+:: Extract subtitle from source
+if "%scriptname%" EQU "%srcname%" (
+mkvextract --ui-language en tracks "%srcname%" 2:"%srcname%.ass"
+set scriptname=%srcname%.ass
+)
+
 :: That python script is and replacing the font
 py -3 audio\prass\prass.py copy-styles --resample --from audio\template_clean.ass --to "%scriptname%" -o "%scriptname%_sfx.ass"
 
