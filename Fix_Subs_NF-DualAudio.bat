@@ -48,7 +48,7 @@ set /p mux=Mux everything together at the end (y/n):
 
 :GGF
 
-:: A second muxing for setting the correct fps and removing audio delay - you might have to change it for non 24,976fps content
+:: A second muxing for setting the correct fps and removing audio delay - you might have to change it for non 23,976fps content
 if NOT exist "%videoname%_fixed.mkv" (
  mkvmerge -o "%videoname%_fixed.mkv"  "--default-track" "0:yes"  "--default-duration" "0:24000/1001p" "--fix-bitstream-timing-information" "0:1" "-a" "1,2" "-d" "0" "-S" "-T" "(" "%videoname%" ")" "--track-order" "0:0,0:1,0:2"
 )
