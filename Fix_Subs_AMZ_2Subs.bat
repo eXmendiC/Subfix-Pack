@@ -48,7 +48,7 @@ set /p mux=Mux everything together at the end (y/n):
 
 :GGF
 
-:: A second muxing for setting the correct fps and removing audio delay - you might have to change it for non 24,976fps content
+:: A second muxing for setting the correct fps and removing audio delay - you might have to change it for non 23,976fps content
 if NOT exist "%videoname%_fixed.mkv" (
  mkvmerge -o "%videoname%_fixed.mkv"  "--default-track" "0:yes"  "--default-duration" "0:24000/1001p" "--fix-bitstream-timing-information" "0:1" "-a" "1" "-d" "0" "-S" "-T" "(" "%videoname%" ")" "--track-order" "0:0,0:1"
 )
@@ -98,6 +98,8 @@ ren "%scriptname%_ger.ass" "%scriptname%_ger-needfix.ass"
 py -3 audio\fuehre_mich.py "%scriptname%_ger-needfix.ass" "%scriptname%_ger.ass"
 del "%scriptname%_ger-needfix.ass"
 
+:: Muxing the subtitles and audio
+:: You might want to change the "--language" or "--default-duration" here
 if "%mux%" EQU "y" (
   mkvmerge -o "%videoname%_final.mkv"  "--language" "0:jpn" "--default-track" "0:yes" "--default-duration" "0:24000/1001p" "--language" "1:jpn" "--default-track" "1:yes" "-a" "1" "-d" "0" "-S" "-T" "(" "%videoname%_fixed.mkv" ")" "--sub-charset" "0:UTF-8" "--language" "0:ger"  "--track-name" "0:Deutsch"  "--default-track" "0:yes" "-s" "0" "-D" "-A" "-T" "(" "%scriptname%_ger.ass" ")" "--sub-charset" "0:UTF-8" "--language" "0:eng" "--track-name" "0:English" "--default-track" "0:no" "-s" "0" "-D" "-A" "-T" "(" "%scriptname%_eng.ass" ")" "--track-order" "0:0,0:1,1:0,2:0" "--attachment-mime-type" "application/vnd.ms-opentype" "--attachment-name" "%font%" "--attach-file" "audio\%font%" "--attachment-mime-type" "application/vnd.ms-opentype" "--attachment-name" "%font2%" "--attach-file" "audio\%font2%"
   del "%videoname%_fixed.mkv"
