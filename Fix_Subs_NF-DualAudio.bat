@@ -109,5 +109,8 @@ if "%mux%" EQU "y" (
  )
 )
 
+del "%scriptname%_full.ass"
+del "%scriptname%_type.ass"
+
 echo Done.
 PAUSE
