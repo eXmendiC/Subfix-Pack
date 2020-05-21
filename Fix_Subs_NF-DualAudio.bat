@@ -101,6 +101,7 @@ py -3 audio\fuehre_mich.py "%scriptname%_fixed1.ass" "%scriptname%_type.ass"
 del "%scriptname%_fixed.ass"
 del "%scriptname%_fixed1.ass"
 
+:: Muxing the subtitles and audio
 :: You might want to change the "--language" here
 if "%mux%" EQU "y" (
   mkvmerge -o "%videoname%_final.mkv"  "--language" "0:jpn" "--default-track" "0:yes" "--default-duration" "0:24000/1001p" "--language" "1:ger" "--default-track" "1:yes" "--language" "2:jpn" "-a" "1,2" "-d" "0" "-S" "-T" "(" "%videoname%_fixed.mkv" ")" "--sub-charset" "0:UTF-8" "--language" "0:ger"  "--track-name" "0:Full"  "--default-track" "0:no" "-s" "0" "-D" "-A" "-T" "(" "%scriptname%_full.ass" ")" "--sub-charset" "0:UTF-8" "--language" "0:gem" "--track-name" "0:Type" "--default-track" "0:yes" "-s" "0" "-D" "-A" "-T" "(" "%scriptname%_type.ass" ")" "--track-order" "0:0,0:1,0:2,1:0,2:0" "--attachment-mime-type" "application/vnd.ms-opentype" "--attachment-name" "%font%" "--attach-file" "audio\%font%" "--attachment-mime-type" "application/vnd.ms-opentype" "--attachment-name" "%font2%" "--attach-file" "audio\%font2%"
