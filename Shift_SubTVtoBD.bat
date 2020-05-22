@@ -31,7 +31,7 @@ set scriptname=%srcname%.ass
 )
 
 :: That python script is and replacing the font
-py -3 audio\prass\prass.py copy-styles --resample --from audio\template_clean.ass --to "%scriptname%" -o "%scriptname%_sfx.ass"
+py -3 audio\prass\prass.py copy-styles --resample --from audio\%template% --to "%scriptname%" -o "%scriptname%_sfx.ass"
 
 :: That python script is fixing the German typographie (for exmaple: „“ instead of "")
 if "%typo%" EQU "y" (
