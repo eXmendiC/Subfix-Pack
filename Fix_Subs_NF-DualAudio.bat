@@ -11,11 +11,13 @@ echo Just press enter for detault values.
 echo Always use lowercase.
 echo.
 REM ######################
+:: Change this values to your liking
 set fast=y
 set extract=n
 set source=srt
 set sush=y
 set mux=y
+set typo=n
 set template=template_basic.ass
 set font=font1.ttf
 set font2=font1i.ttf
@@ -89,17 +91,18 @@ if not exist "%scriptname%_fixed1.ass" (
 )
 del "%scriptname%"
 
-:: Uncomment this for other languages than "German"
-REM ren "%scriptname%_fixed.ass" "%scriptname%_full.ass"
-REM ren "%scriptname%_fixed1.ass" "%scriptname%_type.ass"
+ren "%scriptname%_fixed.ass" "%scriptname%_full.ass"
+ren "%scriptname%_fixed1.ass" "%scriptname%_type.ass"
 
-:: Comment this out for other languages than "German"
 :: That python script is fixing the typographie (for exmaple: „“ instead of "")
-py -3 audio\fuehre_mich.py "%scriptname%_fixed.ass" "%scriptname%_full.ass"
-py -3 audio\fuehre_mich.py "%scriptname%_fixed1.ass" "%scriptname%_type.ass"
-
-del "%scriptname%_fixed.ass"
-del "%scriptname%_fixed1.ass"
+if "%typo%" EQU "y" (
+ren "%scriptname%_full.ass" "%scriptname%_full-needfix.ass"
+py -3 audio\fuehre_mich.py "%scriptname%_full-needfix.ass" "%scriptname%_full.ass"
+ren "%scriptname%_type.ass" "%scriptname%_type-needfix.ass"
+py -3 audio\fuehre_mich.py "%scriptname%_type-needfix.ass" "%scriptname%_type.ass"
+del "%scriptname%_full-needfix.ass"
+del "%scriptname%_type-needfix.ass"
+)
 
 :: Muxing the subtitles and audio
 :: You might want to change the "--language" or "--default-duration" here
