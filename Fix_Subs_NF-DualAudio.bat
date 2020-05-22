@@ -23,6 +23,7 @@ set font=font1.ttf
 set font2=font1i.ttf
 REM ######################
 
+:: Extract subtitle from source (only works with .srt)
 if "%extract%" EQU "y" (
 mkvextract --ui-language en tracks "%~1" 3:"%~n1-01.srt" 4:"%~n1-02.srt"
 set videoname=%~n1.mkv
@@ -62,6 +63,11 @@ if "%source%" EQU "srt" (
  py -3 audio\amazon-netflix_typeset_split.py "%scriptname%_srt.ass" "%scriptname%_tmp.ass"
  del "%scriptname%_srt.ass"
   echo Converting srt to ass successful
+)
+
+if "%source%" EQU "ass" (
+:: That python script is and replacing the font
+py -3 audio\prass\prass.py copy-styles --resample --from audio\%template% --to "%scriptname%" -o "%scriptname%_tmp.ass"
 )
 
 :: This step is important for fixing weird border upscaling with players like mpv
