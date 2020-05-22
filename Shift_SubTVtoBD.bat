@@ -10,6 +10,7 @@ echo Always use lowercase.
 echo.
 REM ######################
 set template=template_basic.ass
+set typo=n
 REM ######################
 :anew
 set /p srcname=TV-Source (e.g. TestTV.mkv): 
@@ -28,12 +29,12 @@ set scriptname=%srcname%.ass
 :: That python script is and replacing the font
 py -3 audio\prass\prass.py copy-styles --resample --from audio\template_clean.ass --to "%scriptname%" -o "%scriptname%_sfx.ass"
 
-:: Comment this out for other languages than "German"
-:: That python script is fixing the typographie (for exmaple: „“ instead of "")
-:: ren "%scriptname%_sfx.ass" "%scriptname%_sfx-needfix.ass"
-:: py -3 audio\fuehre_mich.py "%scriptname%_sfx-needfix.ass" "%scriptname%_sfx.ass"
-:: del "%scriptname%_sfx-needfix.ass"
-
+:: That python script is fixing the German typographie (for exmaple: „“ instead of "")
+if "%typo%" EQU "y" (
+ren "%scriptname%_sfx.ass" "%scriptname%_sfx-needfix.ass"
+py -3 audio\fuehre_mich.py "%scriptname%_sfx-needfix.ass" "%scriptname%_sfx.ass"
+del "%scriptname%_sfx-needfix.ass"
+)
 
 :: Shifting the subtitles
 py -2 audio\sushi\sushi.py --src "%srcname%" --src-keyframes auto --dst "%dstname%" --dst-keyframes auto --kf-mode all --max-ts-duration 0.5 --max-ts-distance 1 --script "%scriptname%_sfx.ass" --max-kf-distance 2.5 -o "%scriptname%-sushi.ass"
