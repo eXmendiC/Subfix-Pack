@@ -88,7 +88,7 @@ ren "%scriptname%_fixed.ass" "%scriptname%_eng.ass"
 ren "%scriptname%_fixed1.ass" "%scriptname%_ger.ass"
 
 :: Comment this out for other languages than "German"
-:: That python script is fixing the typographie of Netflix (for exmaple: „“ instead of "")
+:: That python script is fixing the typographie (for exmaple: „“ instead of "")
 ren "%scriptname%_ger.ass" "%scriptname%_ger-needfix.ass"
 py -3 audio\fuehre_mich.py "%scriptname%_ger-needfix.ass" "%scriptname%_ger.ass"
 del "%scriptname%_ger-needfix.ass"
