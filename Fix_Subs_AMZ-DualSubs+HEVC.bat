@@ -52,11 +52,18 @@ if NOT exist "%videoname_hevc%_fixed.mkv" (
  
 if "%source%" EQU "srt" (
 :: That python script is scaling the subtitles and replacing the font
- py -3 audio\prass\prass.py convert-srt "%scriptname%" --encoding utf-8 | py -3 audio\prass\prass.py copy-styles --resolution 1920x1080 --from audio\%template% -o "%scriptname%_srt.ass"
+py -3 audio\prass\prass.py convert-srt "%scriptname%" --encoding utf-8 | py -3 audio\prass\prass.py copy-styles --resolution 1920x1080 --from audio\%template% -o "%scriptname%_srt.ass"
  :: That python script is detecting typeset and making it "/an8" (top)
  py -3 audio\amazon-netflix_typeset_split.py "%scriptname%_srt.ass" "%scriptname%_tmp.ass"
  del "%scriptname%_srt.ass"
   echo Converting srt to ass successful
+)
+
+if "%source%" EQU "ass" (
+:: That python script is and replacing the font
+py -3 audio\prass\prass.py copy-styles --resample --from audio\%template% --to "%scriptname%" -o "%scriptname%_srt.ass"
+ :: That python script is detecting typeset and making it "/an8" (top)
+ py -3 audio\amazon-netflix_typeset_split.py "%scriptname%_srt.ass" "%scriptname%_tmp.ass"
 )
 
 :: This step is important for fixing weird border upscaling with players like mpv
