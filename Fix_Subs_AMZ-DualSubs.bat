@@ -16,6 +16,7 @@ set extract=n
 set source=srt
 set sush=y
 set mux=y
+set typo=n
 set template=template_basic.ass
 set font=font1.ttf
 set font2=font1i.ttf
@@ -92,11 +93,12 @@ del "%scriptname%"
 ren "%scriptname%_fixed.ass" "%scriptname%_eng.ass"
 ren "%scriptname%_fixed1.ass" "%scriptname%_ger.ass"
 
-:: Comment this out for other languages than "German"
-:: That python script is fixing the typographie (for exmaple: „“ instead of "")
+:: That python script is fixing the German typographie (for exmaple: „“ instead of "")
+if "%typo%" EQU "y" (
 ren "%scriptname%_ger.ass" "%scriptname%_ger-needfix.ass"
 py -3 audio\fuehre_mich.py "%scriptname%_ger-needfix.ass" "%scriptname%_ger.ass"
 del "%scriptname%_ger-needfix.ass"
+)
 
 :: Muxing the subtitles and audio
 :: You might want to change the "--language" or "--default-duration" here
