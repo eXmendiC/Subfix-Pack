@@ -10,8 +10,8 @@ echo Always use lowercase.
 echo.
 REM ######################
 :: Change this values to your liking
-set template=template_basic.ass
 set typo=n
+set template=template_basic.ass
 REM ######################
 :anew
 set /p srcname=TV-Source (e.g. TestTV.mkv): 
