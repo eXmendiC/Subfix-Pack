@@ -91,9 +91,9 @@ ren "%scriptname%_fixed1.ass" "%scriptname%_ger.ass"
 
 :: That python script is fixing the German typographie (for exmaple: „“ instead of "")
 if "%typo%" EQU "y" (
-ren "%scriptname%_sfx.ass" "%scriptname%_sfx-needfix.ass"
-py -3 audio\fuehre_mich.py "%scriptname%_sfx-needfix.ass" "%scriptname%_sfx.ass"
-del "%scriptname%_sfx-needfix.ass"
+ren "%scriptname%_ger.ass" "%scriptname%_ger-needfix.ass"
+py -3 audio\fuehre_mich.py "%scriptname%_ger-needfix.ass" "%scriptname%_ger.ass"
+del "%scriptname%_ger-needfix.ass"
 )
 
 :: Muxing the subtitles and audio
