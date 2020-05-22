@@ -94,7 +94,7 @@ REM ren "%scriptname%_fixed.ass" "%scriptname%_full.ass"
 REM ren "%scriptname%_fixed1.ass" "%scriptname%_type.ass"
 
 :: Comment this out for other languages than "German"
-:: That python script is fixing the typographie of Netflix (for exmaple: „“ instead of "")
+:: That python script is fixing the typographie (for exmaple: „“ instead of "")
 py -3 audio\fuehre_mich.py "%scriptname%_fixed.ass" "%scriptname%_full.ass"
 py -3 audio\fuehre_mich.py "%scriptname%_fixed1.ass" "%scriptname%_type.ass"
 
