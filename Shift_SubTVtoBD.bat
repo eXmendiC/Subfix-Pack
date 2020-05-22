@@ -10,6 +10,7 @@ echo Always use lowercase.
 echo.
 REM ######################
 :: Change this values to your liking
+set source=ass
 set typo=n
 set template=template_basic.ass
 set tvfonts=y
