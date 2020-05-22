@@ -9,7 +9,7 @@ echo Just press enter for detault values.
 echo Always use lowercase.
 echo.
 REM ######################
-set template=template_advanced.ass
+set template=template_basic.ass
 REM ######################
 :anew
 set /p srcname=TV-Source (e.g. TestTV.mkv): 
