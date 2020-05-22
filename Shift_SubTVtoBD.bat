@@ -24,14 +24,30 @@ set /p scriptname=TV-Subtitle (e.g. TestTV.ass):
 set /p dstname=BD-Source (e.g. TestBD.mkv): 
 echo.
 
-:: Extract subtitle from source
+:: Extract subtitle from source (only works with .ass)
 if "%scriptname%" EQU "%srcname%" (
 mkvextract --ui-language en tracks "%srcname%" 2:"%srcname%.ass"
 set scriptname=%srcname%.ass
 )
 
+if "%source%" EQU "srt" (
+:: That python script is scaling the subtitles and replacing the font
+ py -3 audio\prass\prass.py convert-srt "%scriptname%" --encoding utf-8 | py -3 audio\prass\prass.py copy-styles --resolution 1920x1080 --from audio\%template% -o "%scriptname%_srt.ass"
+ :: That python script is detecting typeset and making it "/an8" (top)
+ py -3 audio\amazon-netflix_typeset_split.py "%scriptname%_srt.ass" "%scriptname%_sfx.ass"
+ del "%scriptname%_srt.ass"
+)
+
+if "%source%" EQU "ass" (
 :: That python script is and replacing the font
 py -3 audio\prass\prass.py copy-styles --resample --from audio\%template% --to "%scriptname%" -o "%scriptname%_sfx.ass"
+)
+
+:: This step is important for fixing weird border upscaling with players like mpv
+awk.exe "/\[Script Info\]/ { print; print \"ScaledBorderAndShadow: yes\"; next }1" "%scriptname%_sfx.ass" >"%scriptname%_tmp.ass"
+del "%scriptname%_sfx.ass"
+ren "%scriptname%_tmp.ass" "%scriptname%_sfx.ass"
+
 
 :: That python script is fixing the German typographie (for exmaple: „“ instead of "")
 if "%typo%" EQU "y" (
