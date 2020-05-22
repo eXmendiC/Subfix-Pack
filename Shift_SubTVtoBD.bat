@@ -12,6 +12,9 @@ REM ######################
 :: Change this values to your liking
 set typo=n
 set template=template_basic.ass
+set tvfonts=y
+set font=font1.ttf
+set font2=font1i.ttf
 REM ######################
 :anew
 set /p srcname=TV-Source (e.g. TestTV.mkv): 
@@ -44,14 +47,18 @@ py -2 audio\sushi\sushi.py --src "%srcname%" --src-keyframes auto --dst "%dstnam
 REM "%scriptname%-sushi.ass" "%scriptname%-sushi2.ass"
 REM py -3 audio\prass\prass.py tpp "%scriptname%-sushi2.ass" --lead-in 43 --lead-out 43 --gap 210 --overlap 126 --bias 60 --keyframes "%dstname%.sushi.keyframes.txt" --fps 23.976 --kf-before-start 210 --kf-before-end 294 --kf-after-start 294 --kf-after-end 294 -o "%scriptname%-sushi.ass"
 
-:: Muxing the subtitles with the Blu-ray video (including fonts)
+:: Muxing the subtitles with the Blu-ray video (including TV fonts)
 :: You might want to change the "--language" here
+if "%tvfonts%" EQU "y" (
 mkvmerge -o "%dstname%_fixed.mkv"  "--language" "0:jpn" "--default-track" "0:yes" "--language" "1:jpn" "--default-track" "1:yes" "(" "%dstname%" ")" "--no-audio" "--no-video" "--no-subtitles" "--no-chapters" "(" "%srcname%" ")" "--track-order" "0:0,0:1"
-mkvmerge -o "%dstname%_final.mkv" "%dstname%_fixed.mkv" "--language" "0:ger" "--track-name" "0:Subs" "--default-track" "0:yes" "%scriptname%-sushi.ass" "--attachment-mime-type" "application/vnd.ms-opentype" "--attachment-name" "font.ttf" "--attach-file" "audio\font.ttf" "--attachment-mime-type" "application/vnd.ms-opentype" "--attachment-name" "font2.ttf" "--attach-file" "audio\font2.ttf"
+mkvmerge -o "%dstname%_final.mkv" "%dstname%_fixed.mkv" "--language" "0:ger" "--track-name" "0:Subs" "--default-track" "0:yes" "%scriptname%-sushi.ass" "--attachment-mime-type" "application/vnd.ms-opentype" "--attachment-name" "%font%" "--attach-file" "audio\%font%" "--attachment-mime-type" "application/vnd.ms-opentype" "--attachment-name" "%font2%" "--attach-file" "audio\%font2%"
+)
 
-:: Muxing the subtitles with the Blu-ray video (excluding fonts)
+:: Muxing the subtitles with the Blu-ray video (excluding TV fonts)
 :: You might want to change the "--language" here
-REM mkvmerge -o "%dstname%_final.mkv" "%dstname%" "--language" "0:ger" "--track-name" "0:Subs" "--default-track" "0:yes" "%scriptname%-sushi.ass" "--attachment-mime-type" "application/vnd.ms-opentype" "--attachment-name" "font.ttf" "--attach-file" "audio\font.ttf" "--attachment-mime-type" "application/vnd.ms-opentype" "--attachment-name" "font2.ttf" "--attach-file" "audio\font2.ttf"
+if "%tvfonts%" EQU "n" (
+mkvmerge -o "%dstname%_final.mkv" "%dstname%" "--language" "0:ger" "--track-name" "0:Subs" "--default-track" "0:yes" "%scriptname%-sushi.ass" "--attachment-mime-type" "application/vnd.ms-opentype" "--attachment-name" "%font%" "--attach-file" "audio\%font%" "--attachment-mime-type" "application/vnd.ms-opentype" "--attachment-name" "%font2%" "--attach-file" "audio\%font2%"
+)
 
 :: Deleting everything that isn't needed anymore
 del "%dstname%_fixed.mkv"
