@@ -67,7 +67,9 @@ if "%source%" EQU "srt" (
 
 if "%source%" EQU "ass" (
 :: That python script is and replacing the font
-py -3 audio\prass\prass.py copy-styles --resample --from audio\%template% --to "%scriptname%" -o "%scriptname%_tmp.ass"
+py -3 audio\prass\prass.py copy-styles --resample --from audio\%template% --to "%scriptname%" -o "%scriptname%_srt.ass"
+ :: That python script is detecting typeset and making it "/an8" (top)
+ py -3 audio\amazon-netflix_typeset_split.py "%scriptname%_srt.ass" "%scriptname%_tmp.ass"
 )
 
 :: This step is important for fixing weird border upscaling with players like mpv
