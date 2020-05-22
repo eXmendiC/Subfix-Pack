@@ -11,6 +11,7 @@ echo Just press enter for detault values.
 echo Always use lowercase.
 echo.
 REM ######################
+:: Change this values to your liking
 set fast=y
 set extract=n
 set source=srt
