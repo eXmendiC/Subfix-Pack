@@ -9,6 +9,7 @@ echo Just press enter for detault values.
 echo Always use lowercase.
 echo.
 REM ######################
+:: Change this values to your liking
 set template=template_basic.ass
 set typo=n
 REM ######################
