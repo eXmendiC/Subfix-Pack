@@ -30,11 +30,6 @@ if "%scriptname%" EQU "%srcname%" (
  del "%srcname%_test.mkv"
 )
 
-:: Extract subtitle from source (only works with .ass)
-mkvextract --ui-language en tracks "%srcname%" 2:"%srcname%.ass"
-set scriptname=%srcname%.ass
-)
-
 if "%source%" EQU "srt" (
 :: That python script is scaling the subtitles and replacing the font
  py -3 audio\prass\prass.py convert-srt "%scriptname%" --encoding utf-8 | py -3 audio\prass\prass.py copy-styles --resolution 1920x1080 --from audio\%template% -o "%scriptname%_srt.ass"
