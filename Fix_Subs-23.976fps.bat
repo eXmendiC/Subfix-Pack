@@ -1,6 +1,5 @@
 @echo off
 :: This script is for subtitles from different sources (timing & font).
-:: For "extract=y" you need the following base as a MKV: "ID0:Video" + "ID1:Audio" + "ID2:Sub"
 REM ######################
 setlocal ENABLEDELAYEDEXPANSION
 echo.
@@ -27,18 +26,12 @@ set font2=font1i.ttf
 REM ######################
 
 if "%extract%" EQU "y" (
- if "%source%" EQU "ass" (
- mkvextract --ui-language en tracks "%~1" 2:"%~n1.ass"
- set videoname=%~n1.mkv
- set scriptname=%~n1.ass
+ mkvmerge.exe --ui-language en --output "%~n1_test%~x1" --no-audio --no-video --no-attachments "(" "%~n1%~x1" ")"
+ mkvextract --ui-language en tracks "%~n1_test%~x1" 0:"%~n1.sub"
+ set videoname=%~n1%~x1
+ set scriptname=%~n1.sub
+ del "%~n1_test%~x1"
  goto TTT
- )
- if "%source%" EQU "srt" (
- mkvextract --ui-language en tracks "%~1" 2:"%~n1.srt"
- set videoname=%~n1.mkv
- set scriptname=%~n1.srt
- goto TTT
- )
 )
 
 set /p videoname=Video (e.g. Test.mkv): 
@@ -58,15 +51,14 @@ echo Default is font2.ttf
 set /p font2=Italic font (e.g. font2.ttf): 
 echo Default is ass
 set /p source=srt or ass input (e.g. ass): 
-echo Default is n
+echo Default is y
 set /p secpass=Use a second mux pass (y/n): 
 echo Default is 0
 set /p shifting=Time difference for subtitles (1,2,24 for frame/s forward, 0 for nothing or -1,-2,-24 for frame/s backward): 
 echo Default is y
 set /p timefix=Run timefix (y/n): 
- if "%timefix%" EQU "y" (
- echo Default is 3
- set /p timefixmode=Strenght of the timefix (0-6): 
+echo Default is 3
+set /p timefixmode=Strenght of the timefix (0-6): 
 )
 echo Default is y
 set /p mux=Mux everything together at the end (y/n): 
@@ -191,6 +183,7 @@ if "%typo%" EQU "y" (
 if "%mux%" EQU "y" (
  mkvmerge -o "%videoname%_final.mkv" "%videoname%_fixed.mkv" "--sub-charset" "0:UTF-8" "--language" "0:zxx" "--track-name" "0:" "--default-track" "0:yes" "%scriptname%_fixed.ass" "--attachment-mime-type" "application/vnd.ms-opentype" "--attachment-name" "%font%" "--attach-file" "audio\%font%" "--attachment-mime-type" "application/vnd.ms-opentype" "--attachment-name" "%font2%" "--attach-file" "audio\%font2%"
  del "%videoname%_fixed.mkv"
+ del "%scriptname%_fixed.ass"
 )
 
 echo Done.
