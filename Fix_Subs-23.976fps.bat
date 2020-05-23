@@ -20,6 +20,7 @@ set timefixmode=3
 set shifting=0
 set secpass=y
 set mux=y
+set typo=n
 set template=template_advanced.ass
 set font=font1.ttf
 set font2=font1i.ttf
