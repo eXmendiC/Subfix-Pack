@@ -24,6 +24,7 @@ set font=font1.ttf
 set font2=font1i.ttf
 REM ######################
 
+:: Extract subtitle from source
 if "%extract%" EQU "y" (
  mkvmerge.exe --ui-language en --output "%~n1_test%~x1" --no-audio --no-video --no-attachments "(" "%~n1%~x1" ")"
  mkvextract --ui-language en tracks "%~n1_test%~x1" 0:"%~n1-01.sub" 1:"%~n1-02.sub"
