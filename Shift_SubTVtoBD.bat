@@ -11,6 +11,7 @@ echo.
 REM ######################
 :: Change this values to your liking
 set source=ass
+set prass=n
 set typo=n
 set template=template_basic.ass
 set tvfonts=y
@@ -60,9 +61,11 @@ del "%scriptname%_sfx-needfix.ass"
 :: Shifting the subtitles
 py -2 audio\sushi\sushi.py --src "%srcname%" --src-keyframes auto --dst "%dstname%" --dst-keyframes auto --kf-mode all --max-ts-duration 0.5 --max-ts-distance 1 --script "%scriptname%_sfx.ass" --max-kf-distance 2.5 -o "%scriptname%-sushi.ass"
 
-:: Some additional timing fixing if sushi isn't accurate enough
-REM "%scriptname%-sushi.ass" "%scriptname%-sushi2.ass"
-REM py -3 audio\prass\prass.py tpp "%scriptname%-sushi2.ass" --lead-in 43 --lead-out 43 --gap 210 --overlap 126 --bias 60 --keyframes "%dstname%.sushi.keyframes.txt" --fps 23.976 --kf-before-start 210 --kf-before-end 294 --kf-after-start 294 --kf-after-end 294 -o "%scriptname%-sushi.ass"
+:: Some additional timing fixing
+if "%prass%" EQU "y" (
+"%scriptname%-sushi.ass" "%scriptname%-sushi2.ass"
+py -3 audio\prass\prass.py tpp "%scriptname%-sushi2.ass" --lead-in 84 --lead-out 84 --gap 252 --overlap 210 --bias 80 --keyframes "%dstname%.sushi.keyframes.txt" --fps 23.976 --kf-before-start 210 --kf-before-end 336 --kf-after-start 294 --kf-after-end 294 -o "%scriptname%-sushi.ass"
+)
 
 :: Muxing the subtitles with the Blu-ray video (including TV fonts)
 :: You might want to change the "--language" here
