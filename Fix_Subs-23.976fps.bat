@@ -43,27 +43,27 @@ if "%fast%" EQU "y" (
 goto GGF
 )
 
+echo .
 echo Default is template_advanced.ass
-set /p template=Template (e.g. template.ass): 
+set /p template=Template (e.g. template.ass) [template]: 
 echo Default is font.ttf
-set /p font=Normal font (e.g. font.ttf): 
+set /p font=Normal font (e.g. font.ttf) [font]: 
 echo Default is font2.ttf
-set /p font2=Italic font (e.g. font2.ttf): 
+set /p font2=Italic font (e.g. font2.ttf) [font2]: 
 echo Default is ass
-set /p source=srt or ass input (e.g. ass): 
+set /p source=srt or ass input (srt/ass) [source]: 
 echo Default is y
-set /p secpass=Use a second mux pass (y/n): 
+set /p secpass=Use a second mux pass (y/n) [secpass]: 
 echo Default is 0
-set /p shifting=Time difference for subtitles (1,2,24 for frame/s forward, 0 for nothing or -1,-2,-24 for frame/s backward): 
+set /p shifting=Shifting timing in frames (1,2,24,0,-1,-2,-24) [shifting]: 
 echo Default is y
-set /p timefixing=Run time fixing (y/n): 
+set /p timefixing=Run time fixing (y/n) [timefixing]: 
 echo Default is 3
-set /p timefixingmode=Strenght of the timefixing (0-6): 
+set /p timefixingmode=Mode of the timefixing (0-6) [timefixingmode]: 
 echo Default is n
-set /p typo=Run german typography fixing (y/n): 
-)
+set /p typo=Run german typography fixing (y/n) [typo]: 
 echo Default is y
-set /p mux=Mux everything together at the end (y/n): 
+set /p mux=Mux everything together at the end (y/n) [mux]: 
 
 :GGF
 echo.
