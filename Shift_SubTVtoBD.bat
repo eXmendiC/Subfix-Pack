@@ -61,7 +61,7 @@ py -2 audio\sushi\sushi.py --src "%srcname%" --src-keyframes auto --dst "%dstnam
 
 :: Some additional timing fixing
 if "%timefix%" EQU "y" (
-"%scriptname%-sushi.ass" "%scriptname%-sushi2.ass"
+ren "%scriptname%-sushi.ass" "%scriptname%-sushi2.ass"
 py -3 audio\prass\prass.py tpp "%scriptname%-sushi2.ass" --lead-in 84 --lead-out 84 --gap 252 --overlap 210 --bias 80 --keyframes "%dstname%.sushi.keyframes.txt" --fps 23.976 --kf-before-start 210 --kf-before-end 336 --kf-after-start 294 --kf-after-end 294 -o "%scriptname%-sushi.ass"
 del "%scriptname%-sushi2.ass"
 )
