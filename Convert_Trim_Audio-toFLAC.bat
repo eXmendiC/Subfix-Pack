@@ -12,9 +12,10 @@ echo Always use lowercase.
 echo.
 REM ######################
 set trim=n
+set mux=n
 REM ######################
 
-ffmpeg.exe -i "%~1" -c:a pcm_s24le "%~n1.wav"
+ffmpeg.exe -i "%~1" -c:a pcm_s16le "%~n1.wav"
 
 if "%trim%" EQU "y" (
 py -3 audio\vfr\vfr.py -i "%~n1.wav" -o "%~n1.trimmed.mka" --fps=24000/1001 -vmr trims.txt
@@ -32,6 +33,17 @@ echo.
 echo Done.
 )
 
+if "%mux%" EQU "y" (
+ IF EXIST "%~n1.trimmed.flac" (
+  ren "%~n1.trimmed.flac" "%~n1.flac"
+ )
+mkvmerge.exe --ui-language en --output "[FLAC] %~n1%~x1" --no-audio  "(" "%~n1%~x1" ")" --language "1:jpn" --default-track "1:yes" --track-name "1:QAAC" "(" "%~n1.flac" ")"
+del "%~n1.flac"
+)
+
+del "%~n1 - Log.txt"
+del "%~n1.meme - Log.txt"
+del "%~n1.trimmed - Log.txt"
 IF EXIST "%~n1.trimmed.mka" (
 	del "%~n1.wav"
 ) 
@@ -47,9 +59,3 @@ IF EXIST "%~n1.trimmed.flac" (
 IF EXIST "%~n1.flac" (
 	del "%~n1.wav"
 ) 
-
-del "%~n1 - Log.txt"
-del "%~n1.meme - Log.txt"
-del "%~n1.trimmed - Log.txt"
-
-@pause
