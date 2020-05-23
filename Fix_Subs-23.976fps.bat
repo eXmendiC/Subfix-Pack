@@ -14,8 +14,8 @@ REM ######################
 set fast=n
 set extract=n
 set source=ass
-set timefix=y
-set timefixmode=3
+set timefixing=y
+set timefixingmode=3
 set shifting=0
 set secpass=y
 set mux=y
@@ -56,9 +56,11 @@ set /p secpass=Use a second mux pass (y/n):
 echo Default is 0
 set /p shifting=Time difference for subtitles (1,2,24 for frame/s forward, 0 for nothing or -1,-2,-24 for frame/s backward): 
 echo Default is y
-set /p timefix=Run timefix (y/n): 
+set /p timefixing=Run time fixing (y/n): 
 echo Default is 3
-set /p timefixmode=Strenght of the timefix (0-6): 
+set /p timefixingmode=Strenght of the timefixing (0-6): 
+echo Default is n
+set /p typo=Run german typography fixing (y/n): 
 )
 echo Default is y
 set /p mux=Mux everything together at the end (y/n): 
@@ -131,42 +133,42 @@ awk "/\[Script Info\]/ { print; print \"ScaledBorderAndShadow: yes\"; next }1" "
 del "%scriptname%_tmp.ass"
 ren "%scriptname%_tmp2.ass" "%scriptname%_tmp.ass"
 
-if "%timefix%" EQU "n" (
+if "%timefixing%" EQU "n" (
  ren "%scriptname%_tmp.ass" "%scriptname%_fixed.ass"
  goto NSU
 )
-if "%timefixmode%" EQU "0" (
+if "%timefixingmode%" EQU "0" (
  ren "%scriptname%_tmp.ass" "%scriptname%_fixed.ass"
  goto NSU
 )
 
-if "%timefix%" EQU "y" (
+if "%timefixing%" EQU "y" (
  if NOT exist "%videoname%_fixed.mkv_keyframes.txt" (
   echo Generate keyframes...
   ffmpeg -i "%videoname%_fixed.mkv" -f yuv4mpegpipe -vf scale=640:360 -pix_fmt yuv420p -vsync drop - | SCXvid "%videoname%_fixed.mkv_keyframes.txt"
   echo Keyframes completed.
   )
- if "%timefixmode%" EQU "1" (
+ if "%timefixingmode%" EQU "1" (
   py -3 audio\prass\prass.py tpp "%scriptname%_tmp.ass" --keyframes "%videoname%_fixed.mkv_keyframes.txt" --fps 23.976 --kf-before-start 84 --kf-before-end 84 --kf-after-start 84 --kf-after-end 84    -o "%scriptname%_fixed.ass"
   del "%scriptname%_tmp.ass"
  )
- if "%timefixmode%" EQU "2" (
+ if "%timefixingmode%" EQU "2" (
   py -3 audio\prass\prass.py tpp "%scriptname%_tmp.ass" --lead-in 42 --lead-out 42 --gap 210 --overlap 126 --bias 50 --keyframes "%videoname%_fixed.mkv_keyframes.txt" --fps 23.976 --kf-before-start 210 --kf-before-end 210 --kf-after-start 252 --kf-after-end 252    -o "%scriptname%_fixed.ass"
   del "%scriptname%_tmp.ass"
  )
- if "%timefixmode%" EQU "3" (
+ if "%timefixingmode%" EQU "3" (
   py -3 audio\prass\prass.py tpp "%scriptname%_tmp.ass" --lead-in 84 --lead-out 84 --gap 462 --overlap 252 --bias 80 --keyframes "%videoname%_fixed.mkv_keyframes.txt" --fps 23.976 --kf-before-start 210 --kf-before-end 294 --kf-after-start 294 --kf-after-end 294    -o "%scriptname%_fixed.ass"
   del "%scriptname%_tmp.ass"
  )
- if "%timefixmode%" EQU "4" (
+ if "%timefixingmode%" EQU "4" (
   py -3 audio\prass\prass.py tpp "%scriptname%_tmp.ass" --lead-in 84 --lead-out 84 --gap 210 --overlap 126 --bias 100 --keyframes "%videoname%_fixed.mkv_keyframes.txt" --fps 23.976 --kf-before-start 210 --kf-before-end 294 --kf-after-start 294 --kf-after-end 294    -o "%scriptname%_fixed.ass"
   del "%scriptname%_tmp.ass"
  )
- if "%timefixmode%" EQU "5" (
+ if "%timefixingmode%" EQU "5" (
   py -3 audio\prass\prass.py tpp "%scriptname%_tmp.ass" --lead-in 42 --lead-out 42 --gap 378 --overlap 252 --bias 60 --keyframes "%videoname%_fixed.mkv_keyframes.txt" --fps 23.976 --kf-before-start 252 --kf-before-end 336 --kf-after-start 294 --kf-after-end 294    -o "%scriptname%_fixed.ass"
   del "%scriptname%_tmp.ass"
  )
- if "%timefixmode%" EQU "6" (
+ if "%timefixingmode%" EQU "6" (
   py -3 audio\prass\prass.py tpp "%scriptname%_tmp.ass" --lead-in 42 --lead-out 0 --gap 252 --overlap 210 --bias 70 --keyframes "%videoname%_fixed.mkv_keyframes.txt" --fps 23.976 --kf-before-start 210 --kf-before-end 336 --kf-after-start 294 --kf-after-end 294    -o "%scriptname%_fixed.ass"
   del "%scriptname%_tmp.ass"
  )
