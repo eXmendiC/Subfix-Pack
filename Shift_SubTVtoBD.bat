@@ -9,6 +9,8 @@ echo Just press enter for detault values.
 echo Always use lowercase.
 echo.
 REM ######################
+:: Explanation: https://iamscum.wordpress.com/guides/sushi/
+REM ######################
 :: Change this values to your liking
 set source=ass
 set timefix=n
@@ -90,5 +92,5 @@ del "%srcname%_fixed.mkv"
 del "%scriptname%_sfx.ass"
 
 echo Done.
+echo.
 goto anew
-PAUSE
