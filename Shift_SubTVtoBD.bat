@@ -30,15 +30,6 @@ if "%scriptname%" EQU "%srcname%" (
  del "%srcname%_test.mkv"
 )
 
-:: Extract subtitle from source
-if "%scriptname%" EQU "%srcname%" (
- mkvmerge.exe --ui-language en --output "%srcname%_test.mkv" --no-audio --no-video --no-attachments --no-chapters "(" "%srcname%" ")"
- mkvextract --ui-language en tracks "%~n1_test%~x1" 0:"%srcname%.sub"
- set scriptname=%srcname%.sub
- del "%srcname%_test.mkv"
- goto TTT
-)
-
 :: Extract subtitle from source (only works with .ass)
 mkvextract --ui-language en tracks "%srcname%" 2:"%srcname%.ass"
 set scriptname=%srcname%.ass
