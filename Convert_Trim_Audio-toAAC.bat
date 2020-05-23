@@ -12,6 +12,7 @@ echo Always use lowercase.
 echo.
 REM ######################
 set trim=n
+set mux=n
 REM ######################
 
 ffmpeg.exe -i "%~1" -c:a pcm_s24le "%~n1.wav"
@@ -32,24 +33,29 @@ echo.
 echo Done.
 )
 
+if "%mux%" EQU "y" (
+ IF EXIST "%~n1.trimmed.m4a" (
+  ren "%~n1.trimmed.m4a" "%~n1.m4a"
+ )
+mkvmerge.exe --ui-language en --output "[QAAC] %~n1%~x1" --no-audio  "(" "%~n1%~x1" ")" --language "1:jpn" --default-track "1:yes" --track-name "1:QAAC" "(" "%~n1.m4a" ")"
+del "%~n1.m4a"
+)
+
+del "%~n1 - Log.txt"
+del "%~n1.meme - Log.txt"
+del "%~n1.trimmed - Log.txt"
 IF EXIST "%~n1.trimmed.mka" (
-	del "%~n1.wav"
+ del "%~n1.wav"
 ) 
 
 IF EXIST "%~n1.meme.wav" (
-	del "%~n1.trimmed.mka"
+ del "%~n1.trimmed.mka"
 ) 
 
 IF EXIST "%~n1.trimmed.m4a" (
-	del "%~n1.meme.wav"
+ del "%~n1.meme.wav"
 ) 
 
 IF EXIST "%~n1.m4a" (
 	del "%~n1.wav"
 ) 
-
-del "%~n1 - Log.txt"
-del "%~n1.meme - Log.txt"
-del "%~n1.trimmed - Log.txt"
-
-@pause
