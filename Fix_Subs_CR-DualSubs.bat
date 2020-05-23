@@ -1,6 +1,6 @@
 @echo off
 :: This script is for fixing German & English subtitles from CR (timing & font).
-:: For "extract=y" you need the following base as a MKV: "Video" + "Audio: Japdub" + "Sub 1: German" + "Sub 2: English"
+:: For "extract=y" you need the following base as a MKV: "Sub 1: German" + "Sub 2: English"
 :: For other languages than German the script needs a bit tweaking (see the comments below)
 REM ######################
 setlocal ENABLEDELAYEDEXPANSION
@@ -11,11 +11,13 @@ echo Just press enter for detault values.
 echo Always use lowercase.
 echo.
 REM ######################
+:: Explanation: https://iamscum.wordpress.com/guides/prass/
+REM ######################
+:: Change this values to your liking
 set fast=y
 set extract=n
-set source=ass
-set timing=0
-set sush=n
+set timefixing=n
+set shifting=0
 set mux=y
 set template=template_advanced.ass
 set font=font1.ttf
@@ -23,16 +25,18 @@ set font2=font1i.ttf
 REM ######################
 
 if "%extract%" EQU "y" (
-mkvextract --ui-language en tracks "%~1" 2:"%~n1-01.srt" 3:"%~n1-02.srt"
-set videoname=%~n1.mkv
-set scriptname=%~n1-01.srt
-set scriptnamenew=%~n1-02.srt
-goto TTT
+ mkvmerge.exe --ui-language en --output "%~n1_test%~x1" --no-audio --no-video --no-attachments "(" "%~n1%~x1" ")"
+ mkvextract --ui-language en tracks "%~n1_test%~x1" 0:"%~n1-01.sub" 1:"%~n1-02.sub"
+ set videoname=%~n1%~x1
+ set scriptname=%~n1-01.sub
+ set scriptnamenew=%~n1-02.sub
+ del "%~n1_test%~x1"
+ goto TTT
 )
 
 set /p videoname=Video (e.g. Test.mkv): 
-set /p scriptname=GER-Subtitle (e.g. Test_de-de.srt): 
-set /p scriptnamenew=ENG-Subtitle (e.g. Test_en-gb.srt): 
+set /p scriptname=GER-Subtitle (e.g. Test_de-de.ass): 
+set /p scriptnamenew=ENG-Subtitle (e.g. Test_en-gb.ass): 
 
 :TTT
 
@@ -43,8 +47,8 @@ goto GGF
 set /p template=Template (e.g. template.ass): 
 set /p font=Normal font (e.g. font.ttf): 
 set /p font2=Italic font (e.g. font2.ttf): 
-set /p source=srt or ass input (e.g. ass): 
-set /p sush=Run sushi (y/n): 
+set /p shifting=Time difference for subtitles (1,2,24 for frame/s forward, 0 for nothing or -1,-2,-24 for frame/s backward): 
+set /p timefixing=Run time fixing (y/n): 
 set /p mux=Mux everything together at the end (y/n): 
 
 :GGF
@@ -53,44 +57,47 @@ set /p mux=Mux everything together at the end (y/n):
 if NOT exist "%videoname%_fixed.mkv" (
  mkvmerge -o "%videoname%_fixed.mkv"  "--default-track" "0:yes"  "--default-duration" "0:24000/1001p" "--fix-bitstream-timing-information" "0:1" "-a" "1" "-d" "0" "-S" "-T" "(" "%videoname%" ")" "--track-order" "0:0,0:1"
 )
- 
-if "%source%" EQU "srt" (
-:: That python script is scaling the subtitles and replacing the font
- py -3 audio\prass\prass.py convert-srt "%scriptname%" --encoding utf-8 | py -3 audio\prass\prass.py copy-styles --resolution 1920x1080 --from audio\%template% -o "%scriptname%_srt.ass"
- :: That python script is detecting typeset and making it "/an8" (top)
- py -3 audio\amazon-netflix_typeset_split.py "%scriptname%_srt.ass" "%scriptname%_tmp.ass"
- del "%scriptname%_srt.ass"
-  echo Converting srt to ass successful
-)
+
+::That python script is replacing the font
+py -3 audio\prass\prass.py copy-styles --resample --from audio\%template% --to "%scriptname%" -o "%scriptname%_tmp.ass"
 
 :: Shifting the subs a few frames forward or backward
-if "%timing%" EQU "0" (
- py -3 audio\prass\prass.py copy-styles --resample --from audio\%template% --to "%scriptname%" -o "%scriptname%_tmp.ass"
+if "%shifting%" EQU "1" (
+ ren "%scriptname%_tmp.ass" "%scriptname%_tmp2.ass"
+ py -3 audio\prass\prass.py shift --by 42ms "%scriptname%_tmp2.ass" -o "%scriptname%_tmp.ass"
+ del "%scriptname%_tmp2.ass"
 )
 
-if "%timing%" EQU "1" (
- py -3 audio\prass\prass.py copy-styles --resample --from audio\%template% --to "%scriptname%" | py -3 audio\prass\prass.py shift --by 42ms -o "%scriptname%_tmp.ass"
+if "%shifting%" EQU "-1" (
+ ren "%scriptname%_tmp.ass" "%scriptname%_tmp2.ass"
+ py -3 audio\prass\prass.py shift --by -42ms "%scriptname%_tmp2.ass" -o "%scriptname%_tmp.ass"
+ del "%scriptname%_tmp2.ass"
 )
 
-if "%timing%" EQU "-1" (
- py -3 audio\prass\prass.py copy-styles --resample --from audio\%template% --to "%scriptname%" | py -3 audio\prass\prass.py shift --by -42ms -o "%scriptname%_tmp.ass"
+if "%shifting%" EQU "2" (
+ ren "%scriptname%_tmp.ass" "%scriptname%_tmp2.ass"
+ py -3 audio\prass\prass.py shift --by 84ms "%scriptname%_tmp2.ass" -o "%scriptname%_tmp.ass"
+ del "%scriptname%_tmp2.ass"
 )
 
-if "%timing%" EQU "2" (
- py -3 audio\prass\prass.py copy-styles --resample --from audio\%template% --to "%scriptname%" | py -3 audio\prass\prass.py shift --by 84ms -o "%scriptname%_tmp.ass"
+if "%shifting%" EQU "-2" (
+ ren "%scriptname%_tmp.ass" "%scriptname%_tmp2.ass"
+ py -3 audio\prass\prass.py shift --by -84ms "%scriptname%_tmp2.ass" -o "%scriptname%_tmp.ass"
+ del "%scriptname%_tmp2.ass"
 )
 
-if "%timing%" EQU "-2" (
- py -3 audio\prass\prass.py copy-styles --resample --from audio\%template% --to "%scriptname%" | py -3 audio\prass\prass.py shift --by -84ms -o "%scriptname%_tmp.ass"
+if "%shifting%" EQU "24" (
+ ren "%scriptname%_tmp.ass" "%scriptname%_tmp2.ass"
+ py -3 audio\prass\prass.py shift --by 1001ms "%scriptname%_tmp2.ass" -o "%scriptname%_tmp.ass"
+ del "%scriptname%_tmp2.ass"
 )
 
-if "%timing%" EQU "24" (
- py -3 audio\prass\prass.py copy-styles --resample --from audio\%template% --to "%scriptname%" | py -3 audio\prass\prass.py shift --by 1001ms -o "%scriptname%_tmp.ass"
+if "%shifting%" EQU "-24" (
+ ren "%scriptname%_tmp.ass" "%scriptname%_tmp2.ass"
+ py -3 audio\prass\prass.py shift --by -1001ms "%scriptname%_tmp2.ass" -o "%scriptname%_tmp.ass"
+ del "%scriptname%_tmp2.ass"
 )
 
-if "%timing%" EQU "-24" (
- py -3 audio\prass\prass.py copy-styles --resample --from audio\%template% --to "%scriptname%" | py -3 audio\prass\prass.py shift --by -1001ms -o "%scriptname%_tmp.ass"
-)
 
 :: This step is important for fixing weird border upscaling with players like mpv
 awk.exe "/\[Script Info\]/ { print; print \"ScaledBorderAndShadow: yes\"; next }1" "%scriptname%_tmp.ass" >"%scriptname%_tmp2.ass"
@@ -99,7 +106,7 @@ ren "%scriptname%_tmp2.ass" "%scriptname%_tmp.ass"
 echo Fixing border successful
 
 :: Creating keyframes & fixing timing
-if "%sush%" EQU "y" (
+if "%timefixing%" EQU "y" (
  if NOT exist "%videoname%_fixed.mkv_keyframes.txt" (
   echo Generate keyframes...
   ffmpeg -i "%videoname%_fixed.mkv" -f yuv4mpegpipe -vf scale=640:360 -pix_fmt yuv420p -vsync drop - | SCXvid "%videoname%_fixed.mkv_keyframes.txt"
@@ -109,7 +116,7 @@ if "%sush%" EQU "y" (
   del "%scriptname%_tmp.ass"
  )
 )
-if "%sush%" EQU "n" (
+if "%timefixing%" EQU "n" (
  ren "%scriptname%_tmp.ass" "%scriptname%_fixed.ass"
 )
 
