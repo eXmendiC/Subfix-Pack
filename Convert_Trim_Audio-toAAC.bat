@@ -2,6 +2,7 @@
 :: This script is for subtitles from different sources (timing & font).
 :: Drag & Drop the FLAC/WAV above it
 :: Set "trim=y" if you want to trim the audio before converting
+:: Set "replace=y" if you want to replace the source audio with the output
 REM ######################
 setlocal ENABLEDELAYEDEXPANSION
 echo.
@@ -12,7 +13,7 @@ echo Always use lowercase.
 echo.
 REM ######################
 set trim=n
-set mux=n
+set replace=n
 REM ######################
 
 ffmpeg.exe -i "%~1" -c:a pcm_s24le "%~n1.wav"
@@ -33,7 +34,7 @@ echo.
 echo Done.
 )
 
-if "%mux%" EQU "y" (
+if "%replace%" EQU "y" (
  IF EXIST "%~n1.trimmed.m4a" (
   ren "%~n1.trimmed.m4a" "%~n1.m4a"
  )
