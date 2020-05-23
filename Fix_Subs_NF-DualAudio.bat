@@ -11,11 +11,13 @@ echo Just press enter for detault values.
 echo Always use lowercase.
 echo.
 REM ######################
+:: Explanation: https://iamscum.wordpress.com/guides/prass/
+REM ######################
 :: Change this values to your liking
 set fast=y
 set extract=n
 set source=srt
-set sush=y
+set timefixing=y
 set mux=y
 set typo=n
 set template=template_basic.ass
@@ -25,11 +27,13 @@ REM ######################
 
 :: Extract subtitle from source (only works with .srt)
 if "%extract%" EQU "y" (
-mkvextract --ui-language en tracks "%~1" 3:"%~n1-01.srt" 4:"%~n1-02.srt"
-set videoname=%~n1.mkv
-set scriptname=%~n1-01.srt
-set scriptnamenew=%~n1-02.srt
-goto TTT
+ mkvmerge.exe --ui-language en --output "%~n1_test%~x1" --no-audio --no-video --no-attachments "(" "%~n1%~x1" ")"
+ mkvextract --ui-language en tracks "%~n1_test%~x1" 0:"%~n1-01.sub" 1:"%~n1-02.sub"
+ set videoname=%~n1%~x1
+ set scriptname=%~n1-01.sub
+ set scriptnamenew=%~n1-02.sub
+ del "%~n1_test%~x1"
+ goto TTT
 )
 
 set /p videoname=Video with japdub and other dubbed track (e.g. Test.mkv): 
@@ -46,7 +50,7 @@ set /p template=Template (e.g. template.ass):
 set /p font=Normal font (e.g. font.ttf): 
 set /p font2=Italic font (e.g. font2.ttf): 
 set /p source=srt or ass input (e.g. ass): 
-set /p sush=Run sushi (y/n): 
+set /p timefixing=Run time fixing (y/n): 
 set /p mux=Mux everything together at the end (y/n): 
 
 :GGF
@@ -79,7 +83,7 @@ ren "%scriptname%_tmp2.ass" "%scriptname%_tmp.ass"
 echo Fixing border successful
 
 :: Creating keyframes & fixing timing
-if "%sush%" EQU "y" (
+if "%timefixing%" EQU "y" (
  if NOT exist "%videoname%_fixed.mkv_keyframes.txt" (
   echo Generate keyframes...
   ffmpeg -i "%videoname%_fixed.mkv" -f yuv4mpegpipe -vf scale=640:360 -pix_fmt yuv420p -vsync drop - | SCXvid "%videoname%_fixed.mkv_keyframes.txt"
