@@ -89,7 +89,7 @@ if "%timefixing%" EQU "y" (
   ffmpeg -i "%videoname%_fixed.mkv" -f yuv4mpegpipe -vf scale=640:360 -pix_fmt yuv420p -vsync drop - | SCXvid "%videoname%_fixed.mkv_keyframes.txt"
   echo Keyframes completed.
   )
-  py -3 audio\prass\prass.py tpp "%scriptname%_tmp.ass" --lead-in 84 --lead-out 84 --gap 210 --overlap 126 --bias 100 --keyframes "%videoname%_fixed.mkv_keyframes.txt" --fps 23.976 --kf-before-start 210 --kf-before-end 294 --kf-after-start 294 --kf-after-end 294    -o "%scriptname%_fixed.ass"
+  py -3 audio\prass\prass.py tpp "%scriptname%_tmp.ass" --lead-in 128 --lead-out 128 --gap 378 --overlap 210 --bias 80 --keyframes "%videoname%_fixed.mkv_keyframes.txt" --fps 23.976 --kf-before-start 210 --kf-before-end 336 --kf-after-start 294 --kf-after-end 294    -o "%scriptname%_fixed.ass"
   del "%scriptname%_tmp.ass"
  )
 )
