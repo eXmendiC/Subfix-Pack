@@ -22,6 +22,13 @@ set font2=font1i.ttf
 REM ######################
 
 :anew
+set /p srcname=TV-Source (e.g. TestTV.mkv): 
+set scriptname=%srcname%
+echo Leave empty when the subs are already muxed as a .ass and primary subtitle track with the TV version
+set /p scriptname=TV-Subtitle (e.g. TestTV.ass): 
+set /p dstname=BD-Source (e.g. TestBD.mkv): 
+echo.
+
 :: Extract subtitle from source
 if "%scriptname%" EQU "%srcname%" (
  mkvmerge.exe --ui-language en --output "%srcname%_test.mkv" --no-audio --no-video --no-attachments --no-chapters "(" "%srcname%" ")"
