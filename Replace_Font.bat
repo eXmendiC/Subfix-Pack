@@ -13,6 +13,7 @@ REM ######################
 REM ######################
 :: Change this values to your liking
 set source=ass
+set extract=y
 set typo=n
 set mux=y
 set template=template_basic.ass
@@ -20,7 +21,16 @@ set font=font1.ttf
 set font2=font1i.ttf
 REM ######################
 
-:anew
+:: Extract subtitle from source
+if "%extract%" EQU "y" (
+ mkvmerge.exe --ui-language en --output "%~n1_test%~x1" --no-audio --no-video --no-attachments --no-chapters "(" "%~n1%~x1" ")"
+ mkvextract --ui-language en tracks "%~n1_test%~x1" 0:"%~n1.sub"
+ set srcname=%~n1%~x1
+ set scriptname=%~n1.sub
+ del "%~n1_test%~x1"
+ goto TTT
+)
+
 set /p srcname=Source (e.g. TestTV.mkv): 
 set scriptname=%srcname%
 echo Leave empty when the subs are already muxed as a .ass and primary subtitle track with the TV version
@@ -34,6 +44,8 @@ if "%scriptname%" EQU "%srcname%" (
  set scriptname=%srcname%.sub
  del "%srcname%_test.mkv"
 )
+
+:TTT
 
 if "%source%" EQU "srt" (
 :: That python script is scaling the subtitles and replacing the font
@@ -61,18 +73,18 @@ py -3 audio\fuehre_mich.py "%scriptname%_sfx-needfix.ass" "%scriptname%_sfx.ass"
 del "%scriptname%_sfx-needfix.ass"
 )
 
-:: Lazy renaming, no sushi
-ren "%scriptname%_sfx.ass" "%scriptname%-sushi.ass"
+:: Renaming
+ren "%scriptname%_sfx.ass" "%scriptname%-newfont.ass"
 
 :: Muxing the subtitles with the video
 :: You might want to change the "--language" here
 if "%mux%" EQU "y" (
-mkvmerge -o "%srcname%_final.mkv" "%srcname%" "--language" "0:eng" "--track-name" "0:Subs" "--default-track" "0:yes" "%scriptname%-sushi.ass" "--attachment-mime-type" "application/vnd.ms-opentype" "--attachment-name" "%font%" "--attach-file" "audio\%font%" "--attachment-mime-type" "application/vnd.ms-opentype" "--attachment-name" "%font2%" "--attach-file" "audio\%font2%"
+mkvmerge -o "%srcname%_final.mkv" "%srcname%" "--language" "0:eng" "--track-name" "0:Subs" "--default-track" "0:yes" "%scriptname%-newfont.ass" "--attachment-mime-type" "application/vnd.ms-opentype" "--attachment-name" "%font%" "--attach-file" "audio\%font%" "--attachment-mime-type" "application/vnd.ms-opentype" "--attachment-name" "%font2%" "--attach-file" "audio\%font2%"
 )
 
 :: Deleting everything that isn't needed anymore
 del "%srcname%.sub"
+del "%~n1.sub"
 
 echo Done.
-echo.
-goto anew
+PAUSE
