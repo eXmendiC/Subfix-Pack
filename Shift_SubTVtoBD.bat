@@ -93,6 +93,7 @@ del "%srcname%.sushi.keyframes.txt"
 del "%dstname%.sushi.keyframes.txt"
 del "%srcname%_fixed.mkv"
 del "%scriptname%_sfx.ass"
+del "%srcname%.sub"
 
 echo Done.
 echo.
