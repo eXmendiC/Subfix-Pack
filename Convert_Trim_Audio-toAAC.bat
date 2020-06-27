@@ -2,7 +2,8 @@
 :: Drag & Drop the FLAC/WAV above it
 :: Set "trim=y" if you want to trim the audio before converting
 :: Set "replace=y" if you want to replace the source audio with the output
-:: Change "audiotrack=1" if you want a different audio track
+:: Change "track=1" if you want a different audio track
+:: You have to set it to "0" if you have just an audio and no video source!
 REM ######################
 setlocal ENABLEDELAYEDEXPANSION
 echo.
@@ -14,10 +15,10 @@ echo.
 REM ######################
 set trim=n
 set replace=n
-set audiotrack=1
+set track=1
 REM ######################
 
-ffmpeg.exe -i "%~1" -map 0:%audiotrack% -c:a pcm_s24le "%~n1.wav"
+ffmpeg.exe -i "%~1" -map 0:%track% -c:a pcm_s24le "%~n1.wav"
 
 if "%trim%" EQU "y" (
 py -3 audio\vfr\vfr.py -i "%~n1.wav" -o "%~n1.trimmed.mka" --fps=24000/1001 -vmr trims.txt
