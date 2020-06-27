@@ -2,6 +2,7 @@
 :: Drag & Drop the FLAC/WAV above it
 :: Set "trim=y" if you want to trim the audio before converting
 :: Set "replace=y" if you want to replace the source audio with the output
+:: Change "audiotrack=1" if you want a different audio track
 REM ######################
 setlocal ENABLEDELAYEDEXPANSION
 echo.
