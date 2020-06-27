@@ -3,7 +3,7 @@
 :: Set "trim=y" if you want to trim the audio before converting
 :: Set "replace=y" if you want to replace the source audio with the output
 :: Change "track=1" if you want a different audio track
-:: You have to set it to "0" if there is just an audio and no video source!
+:: You have to set it to "0" for the first audio track if there is just an audio and no video source!
 REM ######################
 setlocal ENABLEDELAYEDEXPANSION
 echo.
