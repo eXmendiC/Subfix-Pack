@@ -13,9 +13,10 @@ echo.
 REM ######################
 set trim=n
 set replace=n
+set audiotrack=1
 REM ######################
 
-ffmpeg.exe -i "%~1" -c:a pcm_s24le "%~n1.wav"
+ffmpeg.exe -i "%~1" -map 0:%audiotrack% -c:a pcm_s24le "%~n1.wav"
 
 if "%trim%" EQU "y" (
 py -3 audio\vfr\vfr.py -i "%~n1.wav" -o "%~n1.trimmed.mka" --fps=24000/1001 -vmr trims.txt
@@ -44,6 +45,7 @@ del "%~n1.m4a"
 del "%~n1 - Log.txt"
 del "%~n1.meme - Log.txt"
 del "%~n1.trimmed - Log.txt"
+del "%~n1.wav"
 IF EXIST "%~n1.trimmed.mka" (
  del "%~n1.wav"
 ) 
