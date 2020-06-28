@@ -1,7 +1,8 @@
 @echo off
-:: Drag & Drop the FLAC/WAV above it
+:: Drag & Drop the MKV/MP4/FLAC/WAV above it
 :: Set "trim=y" if you want to trim the audio before converting
 :: Set "replace=y" if you want to replace the source audio with the output
+:: Change "track=0" if you want to select a different track than auto detect
 REM ######################
 setlocal ENABLEDELAYEDEXPANSION
 echo.
@@ -13,9 +14,15 @@ echo.
 REM ######################
 set trim=n
 set replace=n
+set track=0
 REM ######################
 
-ffmpeg.exe -i "%~1" -c:a pcm_s16le "%~n1.wav"
+if "%track%" EQU "0" (
+ffmpeg.exe -i "%~1" -c:a pcm_s24le "%~n1.wav"
+)
+else (
+ffmpeg.exe -i "%~1" -map 0:%track% -c:a pcm_s24le "%~n1.wav"
+)
 
 if "%trim%" EQU "y" (
 py -3 audio\vfr\vfr.py -i "%~n1.wav" -o "%~n1.trimmed.mka" --fps=24000/1001 -vmr trims.txt
@@ -44,18 +51,20 @@ del "%~n1.flac"
 del "%~n1 - Log.txt"
 del "%~n1.meme - Log.txt"
 del "%~n1.trimmed - Log.txt"
+del "%~n1.wav"
 IF EXIST "%~n1.trimmed.mka" (
-	del "%~n1.wav"
+ del "%~n1.wav"
 ) 
 
 IF EXIST "%~n1.meme.wav" (
-	del "%~n1.trimmed.mka"
+ del "%~n1.trimmed.mka"
 ) 
 
 IF EXIST "%~n1.trimmed.flac" (
-	del "%~n1.meme.wav"
+ del "%~n1.meme.wav"
 ) 
 
 IF EXIST "%~n1.flac" (
-	del "%~n1.wav"
+ del "%~n1.wav"
 ) 
+PAUSE
