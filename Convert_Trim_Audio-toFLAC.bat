@@ -7,9 +7,6 @@ REM ######################
 setlocal ENABLEDELAYEDEXPANSION
 echo.
 echo Keep all files and this batch file in the same folder. 
-echo Only set the names of them, no directory structure (paths)!
-echo Just press enter for detault values.
-echo Always use lowercase.
 echo.
 REM ######################
 set trim=n
