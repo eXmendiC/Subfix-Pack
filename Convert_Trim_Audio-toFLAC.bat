@@ -16,8 +16,7 @@ REM ######################
 
 if "%track%" EQU "0" (
 ffmpeg.exe -i "%~1" -c:a pcm_s24le "%~n1.wav"
-)
-else (
+) else (
 ffmpeg.exe -i "%~1" -map 0:%track% -c:a pcm_s24le "%~n1.wav"
 )
 
