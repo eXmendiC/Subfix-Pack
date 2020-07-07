@@ -9,7 +9,7 @@ echo.
 echo Keep all files and this batch file in the same folder. 
 echo.
 REM ######################
-IF [%1]==[] echo "Drag & Drop the file above it!" && goto end
+IF [%1]==[] echo "Drag & Drop the MKV above it!" && goto end
 REM ######################
 :: Change this values to your liking
 set time=00:00:05.005
