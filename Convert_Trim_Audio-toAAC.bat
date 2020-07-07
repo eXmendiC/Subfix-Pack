@@ -9,6 +9,8 @@ echo.
 echo Keep all files and this batch file in the same folder. 
 echo.
 REM ######################
+IF [%1]==[] echo "Drag & Drop the file above it!" && goto end
+REM ######################
 set trim=n
 set replace=n
 set track=0
@@ -63,4 +65,5 @@ IF EXIST "%~n1.trimmed.m4a" (
 IF EXIST "%~n1.m4a" (
  del "%~n1.wav"
 ) 
+:end
 PAUSE
