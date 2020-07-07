@@ -9,12 +9,10 @@ REM ######################
 setlocal ENABLEDELAYEDEXPANSION
 echo.
 echo Keep all files and this batch file in the same folder. 
-echo Only set the names of them, no directory structure (paths)!
-echo Just press enter for detault values.
-echo Always use lowercase.
 echo.
 REM ######################
-
+IF [%1]==[] echo "Drag & Drop the file above it!" && goto end
+REM ######################
 :: Trimming audio
 :: You might want to change the "fps"
 py -3 audio\vfr\vfr.py -i "%~1" -o "%~n1.trimmed.mka" --fps=24000/1001 -vmr trims.txt
@@ -27,4 +25,5 @@ del "%~n1 - Log.txt"
 del "%~n1.trimmed - Log.txt"
 
 echo Done.
+:end
 PAUSE
