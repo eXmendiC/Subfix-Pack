@@ -19,7 +19,6 @@ set /p start=Start time (e.g. 00:01:41.935):
 set /p end=End time (e.g. 00:01:51.945): 
 REM ######################
 if "%encode%" EQU "y" (
-ffmpeg -ss [start] -i "%~1" -to [duration] -c copy out.mp4
 :: Add "-vf scale=1280x720" before "-c:v libx264", change the preset or raise the crf value if you want to trade accuracy for speed
 ffmpeg -i "%~1" -ss 00:00:00.000 -to %start% -c:v libx264 -preset veryfast -crf 20 -c:a copy "%~n1_temp-001.mkv"
 ffmpeg -i "%~1" -ss %end% -c:v libx264 -preset veryfast -crf 20 -c:a copy "%~n1_temp-002.mkv"
