@@ -64,7 +64,7 @@ del "%scriptname%_sfx-needfix.ass"
 )
 
 :: Shifting the subtitles
-py -2 audio\sushi\sushi.py --src "%srcname%" --src-keyframes auto --dst "%dstname%" --dst-keyframes auto --kf-mode all --max-ts-duration 0.5 --max-ts-distance 1 --script "%scriptname%_sfx.ass" --max-kf-distance 2.5 -o "%scriptname%-sushi.ass"
+py -2 audio\sushi\sushi.py --src "%srcname%" --src-keyframes auto --dst "%dstname%" --dst-keyframes auto --kf-mode all --window 10 --max-window 30 --sample-rate 12000 --max-ts-duration 0.5 --max-ts-distance 1 --script "%scriptname%_sfx.ass" --max-kf-distance 2.5 -o "%scriptname%-sushi.ass"
 
 :: Some additional timing fixing
 if "%timefix%" EQU "y" (
