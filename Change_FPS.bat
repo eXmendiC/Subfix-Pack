@@ -1,11 +1,10 @@
 @echo off
-:: This script is for changing the fps of a source (video/audio) for later purpose like  DVD subs on BD
-:: Drag & Drop the MKV above it
-:: Some PAL DVDs have different fps and one video for all episodes
-:: This script takes care of that issues. However, it can't fix the fps of the subtitles
-:: Extract the subtitles from the result here and use Aegisub for that
-:: Start Aegisub -> Open .srt -> File -> Export subtitles... -> Transform Framerate -> Change values and tick Reverse transformation
-:: Set "full=y" if you rather want to encode the full clip
+:: This script is for changing the fps of a source (audio/subtitle) for later purpose like putting (PAL) DVD subs on BD.
+:: Drag & Drop the MKV above it.
+:: Keep in mind that the audio/subs won't sync with the source video anymore, that's intended! 
+:: It should work with your correct fps BD source now.
+:: Some PAL DVDs have one video for all episodes, use "full=n" then.
+:: Also, read all of the comments to change the fps to your desiered fps settings!
 REM ######################
 setlocal ENABLEDELAYEDEXPANSION
 echo.
@@ -15,7 +14,7 @@ REM ######################
 :: Change this values to your liking
 REM set start=
 REM set end=
-set full=n
+set full=y
 REM ######################
 IF [%1]==[] echo "Drag & Drop the MKV above it!" && goto end
 REM ######################
@@ -31,9 +30,22 @@ ffmpeg -i "%~1" -ss %start% -to %end% -vf yadif -r 24 -c:v libx264 -preset veryf
 )
 :: Change the "-changeTo" value to the fps you want to gain
 eac3\eac3to.exe "[PartEnc] %~n1_test.mkv"  "%~n1_export.wav" -changeTo23.976
-mkvmerge.exe --ui-language en --output "Fix-%~n1.mkv" --no-audio  "(" "[PartEnc] %~n1_test.mkv" ")" --language "1:jpn" --default-track "1:yes" --track-name "1:" "(" "%~n1_export.wav" ")"
+mkvmerge.exe --ui-language en --output "Fix-%~n1.mkv" --no-audio  "(" "[PartEnc] %~n1_test.mkv" ")" --default-track "0:yes" --track-name "0:" "(" "%~n1_export.wav" ")"
+REM mkvextract --ui-language en tracks "Fix-%~n1.mkv" 1:"%~n1.sub"
+REM ffmpeg -i "%~n1.sub" "%~n1.ass"
+ffmpeg -i "Fix-%~n1.mkv" "%~n1.ass"
+:: Change the "--multiplier" value to the fps you want to gain (current_fps/wanted_fps)
+py -3 audio\prass\prass.py shift "%~n1.ass" --multiplier 24/23.976 -o "%~n1_fixed.ass"
+ffmpeg -i "%~n1_fixed.ass" "%~n1.srt"
+mkvmerge.exe --ui-language en --output "Final-%~n1.mkv" --no-subtitles "(" "Fix-%~n1.mkv" ")" --default-track "0:yes" --track-name "0:" "(" "%~n1.srt" ")"
+del "%~n1.sub"
+del "%~n1.ass"
+del "%~n1_fixed.ass"
+del "%~n1.srt"
+del "Fix-%~n1.mkv"
 del "[PartEnc] %~n1_test.mkv"
 del "%~n1_export.wav"
 del "%~n1_export - Log.txt"
 :end
 Pause
+
