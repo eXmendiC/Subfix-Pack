@@ -23,7 +23,8 @@ ffmpeg.exe -i "%~1" -map 0:%track% -c:a pcm_s24le "%~n1.wav"
 )
 
 if "%trim%" EQU "y" (
-py -3 audio\vfr\vfr.py -i "%~n1.wav" -o "%~n1.trimmed.mka" --fps=24000/1001 -vmr trims.txt
+:: You might want to change the "fps"
+py -3 audio\vfr\vfr.py -i "%~n1.wav" -o "%~n1.trimmed.mka" --fps=24000/1001 -vmr trim.txt
 )
 
 IF EXIST "%~n1.trimmed.mka" (
