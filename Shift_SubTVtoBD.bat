@@ -1,5 +1,5 @@
 @echo off
-:: This script is for putting TV subs from a TV show onto a Blu-ray source with correct timing
+:: This script is for putting TV/WEB subs from a TV/WEB show onto a Blu-ray source with correct timing
 REM ######################
 setlocal ENABLEDELAYEDEXPANSION
 echo.
