@@ -29,12 +29,12 @@ py -3 audio\vfr\vfr.py -i "%~n1.wav" -o "%~n1.trimmed.mka" --fps=24000/1001 -vmr
 
 IF EXIST "%~n1.trimmed.mka" (
 echo Convert again...
-eac3\eac3to.exe "%~n1.trimmed.mka" "%~n1.meme.wav"
-eac3\flac.exe -8 "%~n1.meme.wav" -o "%~n1.trimmed.flac"
+audio\eac3\eac3to.exe "%~n1.trimmed.mka" "%~n1.meme.wav"
+audio\eac3\flac.exe -8 "%~n1.meme.wav" -o "%~n1.trimmed.flac"
 echo.
 echo Done.
 ) ELSE (
-eac3\flac.exe -8 "%~n1.wav" -o "%~n1.flac"
+audio\eac3\flac.exe -8 "%~n1.wav" -o "%~n1.flac"
 echo.
 echo Done.
 )
