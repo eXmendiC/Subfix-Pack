@@ -29,12 +29,12 @@ py -3 audio\vfr\vfr.py -i "%~n1.wav" -o "%~n1.trimmed.mka" --fps=24000/1001 -vmr
 
 IF EXIST "%~n1.trimmed.mka" (
 echo Convert again...
-audio\eac3\eac3to.exe "%~n1.trimmed.mka" "%~n1.meme.wav"
-audio\eac3\qaac64.exe "%~n1.meme.wav" -V 127 --no-delay --no-optimize --verbose -o "%~n1.trimmed.m4a"
+audio\eac3to\eac3to.exe "%~n1.trimmed.mka" "%~n1.meme.wav"
+audio\eac3to\qaac64.exe "%~n1.meme.wav" -V 127 --no-delay --no-optimize --verbose -o "%~n1.trimmed.m4a"
 echo.
 echo Done.
 ) ELSE (
-audio\eac3\qaac64.exe "%~n1.wav" -V 127 --no-delay --no-optimize --verbose -o "%~n1.m4a"
+audio\eac3to\qaac64.exe "%~n1.wav" -V 127 --no-delay --no-optimize --verbose -o "%~n1.m4a"
 echo.
 echo Done.
 )
