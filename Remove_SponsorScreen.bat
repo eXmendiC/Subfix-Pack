@@ -22,12 +22,12 @@ if "%encode%" EQU "y" (
 :: Add "-vf scale=1280x720" before "-c:v libx264", change the preset or raise the crf value if you want to trade accuracy for speed
 ffmpeg -i "%~1" -ss 00:00:00.000 -to %start% -c:v libx264 -preset veryfast -crf 20 -c:a copy "%~n1_temp-001.mkv"
 ffmpeg -i "%~1" -ss %end% -c:v libx264 -preset veryfast -crf 20 -c:a copy "%~n1_temp-002.mkv"
-mkvmerge.exe --ui-language en --output "[NoSponsorScreenEnc] %~n1.mkv" "(" "%~n1_temp-001.mkv" ")" + "(" "%~n1_temp-002.mkv" ")"
+mkvmerge --ui-language en --output "[NoSponsorScreenEnc] %~n1.mkv" "(" "%~n1_temp-001.mkv" ")" + "(" "%~n1_temp-002.mkv" ")"
 del "%~n1_temp-001.mkv"
 del "%~n1_temp-002.mkv"
 ) else (
-mkvmerge.exe --ui-language en --output "%~n1_temp.mkv" "(" "%~1" ")" --split parts:00:00:00.000-%start%,%end%-59:59:59.999
-mkvmerge.exe --ui-language en --output "[NoSponsorScreen] %~n1.mkv" "(" "%~n1_temp-001.mkv" ")" + "(" "%~n1_temp-002.mkv" ")"
+mkvmerge --ui-language en --output "%~n1_temp.mkv" "(" "%~1" ")" --split parts:00:00:00.000-%start%,%end%-59:59:59.999
+mkvmerge --ui-language en --output "[NoSponsorScreen] %~n1.mkv" "(" "%~n1_temp-001.mkv" ")" + "(" "%~n1_temp-002.mkv" ")"
 del "%~n1_temp-001.mkv"
 del "%~n1_temp-002.mkv"
 )
