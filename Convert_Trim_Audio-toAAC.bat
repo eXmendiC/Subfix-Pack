@@ -17,9 +17,9 @@ set track=0
 REM ######################
 
 if "%track%" EQU "0" (
-ffmpeg.exe -i "%~1" -c:a pcm_s24le "%~n1.wav"
+ffmpeg -i "%~1" -c:a pcm_s24le "%~n1.wav"
 ) else (
-ffmpeg.exe -i "%~1" -map 0:%track% -c:a pcm_s24le "%~n1.wav"
+ffmpeg -i "%~1" -map 0:%track% -c:a pcm_s24le "%~n1.wav"
 )
 
 if "%trim%" EQU "y" (
@@ -43,7 +43,7 @@ if "%replace%" EQU "y" (
  IF EXIST "%~n1.trimmed.m4a" (
   ren "%~n1.trimmed.m4a" "%~n1.m4a"
  )
-mkvmerge.exe --ui-language en --output "[QAAC] %~n1%~x1" --no-audio  "(" "%~n1%~x1" ")" --language "1:jpn" --default-track "1:yes" --track-name "1:QAAC" "(" "%~n1.m4a" ")"
+mkvmerge --ui-language en --output "[QAAC] %~n1%~x1" --no-audio  "(" "%~n1%~x1" ")" --language "1:jpn" --default-track "1:yes" --track-name "1:QAAC" "(" "%~n1.m4a" ")"
 del "%~n1.m4a"
 )
 
