@@ -31,7 +31,7 @@ echo.
 
 :: Extract subtitle from source
 if "%scriptname%" EQU "%srcname%" (
- mkvmerge.exe --ui-language en --output "%srcname%_test.mkv" --no-audio --no-video --no-attachments --no-chapters "(" "%srcname%" ")"
+ mkvmerge --ui-language en --output "%srcname%_test.mkv" --no-audio --no-video --no-attachments --no-chapters "(" "%srcname%" ")"
  mkvextract --ui-language en tracks "%srcname%_test.mkv" 0:"%srcname%.sub"
  set scriptname=%srcname%.sub
  del "%srcname%_test.mkv"
