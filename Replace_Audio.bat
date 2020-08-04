@@ -31,7 +31,7 @@ echo Old Audio-Codec: %oldcodec%
 echo New Audio-Codec: %acodec%
 call set new_name=%%videoname:%oldcodec%=%acodec%%%
 if "%oldcodec%" EQU "%acodec%" (set "new_name=%videoname%")
-mkvmerge.exe --ui-language en --output "[NEW] %new_name%" --no-audio  "(" "%videoname%" ")" --no-video --no-subtitles --no-attachments --language "1:jpn" --default-track "1:yes" --track-name "1:Replaced" --sync "1:%delay%" "(" "%audioname%" ")"
+mkvmerge --ui-language en --output "[NEW] %new_name%" --no-audio  "(" "%videoname%" ")" --no-video --no-subtitles --no-attachments --language "1:jpn" --default-track "1:yes" --track-name "1:Replaced" --sync "1:%delay%" "(" "%audioname%" ")"
 
 echo Done.
 PAUSE
