@@ -26,7 +26,7 @@ set font2=font1i.ttf
 REM ######################
 
 if "%extract%" EQU "y" (
- mkvmerge.exe --ui-language en --output "%~n1_test%~x1" --no-audio --no-video --no-attachments --no-chapters "(" "%~n1%~x1" ")"
+ mkvmerge --ui-language en --output "%~n1_test%~x1" --no-audio --no-video --no-attachments --no-chapters "(" "%~n1%~x1" ")"
  mkvextract --ui-language en tracks "%~n1_test%~x1" 0:"%~n1.sub"
  set videoname=%~n1%~x1
  set scriptname=%~n1.sub
