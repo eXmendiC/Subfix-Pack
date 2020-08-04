@@ -19,7 +19,7 @@ if "%encode%" EQU "y" (
 :: Add "-vf scale=1280x720" before "-c:v libx264", change the preset or raise the crf value if you want to trade accuracy for speed
 ffmpeg -i "%~1" -ss %time% -c:v libx264 -preset veryfast -crf 20 -c:a copy -c:s copy "[NoIntroEnc] %~n1.mkv"
 ) else (
-mkvmerge.exe --ui-language en --output "[NoIntro] %~n1.mkv" "(" "%~1" ")" --split parts:%time%-59:59:59.999
+mkvmerge --ui-language en --output "[NoIntro] %~n1.mkv" "(" "%~1" ")" --split parts:%time%-59:59:59.999
 )
 :end
 Pause
