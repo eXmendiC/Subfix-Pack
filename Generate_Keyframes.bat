@@ -9,6 +9,6 @@ echo.
 REM ######################
 IF [%1]==[] echo "Drag & Drop the file above it!" && goto end
 REM ######################
-ffmpeg -i "%~1" -f yuv4mpegpipe -vf scale=640:360 -pix_fmt yuv420p -vsync drop - | SCXvid.exe "%~n1_keyframes.txt"
+ffmpeg -i "%~1" -f yuv4mpegpipe -vf scale=640:360 -pix_fmt yuv420p -vsync drop - | SCXvid "%~n1_keyframes.txt"
 echo Done.
 PAUSE
