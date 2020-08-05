@@ -1,5 +1,6 @@
 @echo off
-:: This script is for removing intros of web sources
+:: This script is for removing a sponsor screen after the opening song in old tv encodes
+:: If you have one more before the preview then you need to modify this script on your own
 :: Drag & Drop the MKV above it
 :: Set "encode=y" if the results are too inacurate - this takes longer
 REM ######################
