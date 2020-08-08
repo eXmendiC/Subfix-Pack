@@ -1,7 +1,7 @@
 @echo off
 :: This script is for lazy encoding videos without any filtering
 :: If you want to store your blu-rays a bit better compressed
-:: I recommend converting lossless audio with qaac after that -> "Convert_Trim_Audio-toAAC.bat"
+:: I recommend converting lossless audio with AAC after that -> "Convert_Trim_Audio-toAAC.bat"
 :: Drag & Drop the video above it
 REM ######################
 setlocal ENABLEDELAYEDEXPANSION
