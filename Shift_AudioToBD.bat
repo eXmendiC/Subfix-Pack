@@ -10,6 +10,7 @@ echo Always use lowercase.
 echo.
 REM ######################
 :: Explanation: https://iamscum.wordpress.com/guides/vfr/
+:: Requirements: WSL version 1 with Ubuntu / Debian / Pengwin & ffmpeg + sox
 REM ######################
 
 :anew
