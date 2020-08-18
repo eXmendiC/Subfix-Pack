@@ -79,7 +79,7 @@ wsl sed -i "/,Flashback,,/d" "%scriptname%-type_tmp.ass"
 wsl sed -i "/,Flashback Internal,,/d" "%scriptname%-type_tmp.ass"
 
 :: Remove everything unused (again)
-py -3 audio\prass\prass.py cleanup "%scriptname%-type_tmp.ass" --styles -o "%scriptname%-type.ass"
+py -3 audio\prass\prass.py cleanup "%scriptname%-type_tmp.ass" --styles -o "%scriptname%-type.ZXX.ass"
 del "%scriptname%-type_tmp.ass"
 
 :: Deleting everything that isn't needed anymore
