@@ -20,8 +20,7 @@ set template=template_basic.ass
 REM ######################
 
 :: Extract subtitle from source
-ECHO "%~x1"
-if "%~x1" EQU ".mkv" (
+if /I "%~x1" EQU ".mkv" (
  mkvmerge.exe --ui-language en --output "%~n1_test%~x1" --no-audio --no-video --no-attachments --no-chapters "(" "%~n1%~x1" ")"
  mkvextract --ui-language en tracks "%~n1_test%~x1" 0:"%~n1.sub"
  set srcname=%~n1%~x1
@@ -29,11 +28,11 @@ if "%~x1" EQU ".mkv" (
  del "%~n1_test%~x1"
 )
 
-if "%~x1" EQU ".srt" (
+if /I "%~x1" EQU ".srt" (
  ren "%~n1%~x1" "%~n1.sub"
 )
 
-if "%~x1" EQU ".ass" (
+if /I "%~x1" EQU ".ass" (
  ren "%~n1%~x1" "%~n1.sub"
 )
 
