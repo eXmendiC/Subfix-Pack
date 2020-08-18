@@ -71,13 +71,12 @@ del "%scriptname%_sfx.ass"
 :: Remove everything non-typeset (you might have to change and/or add stuff to it)
 ren "%scriptname%-sorted.ass" "%scriptname%-type_tmp.ass"
 wsl sed -i "/,Default,,/d" "%scriptname%-type_tmp.ass"
+wsl sed -i "/,Overlap,,/d" "%scriptname%-type_tmp.ass"
 wsl sed -i "/,Italic,,/d" "%scriptname%-type_tmp.ass"
-wsl sed -i "/,Top,,/d" "%scriptname%-type_tmp.ass"
 wsl sed -i "/,Internal,,/d" "%scriptname%-type_tmp.ass"
+wsl sed -i "/,Top,,/d" "%scriptname%-type_tmp.ass"
 wsl sed -i "/,Flashback,,/d" "%scriptname%-type_tmp.ass"
 wsl sed -i "/,Flashback Internal,,/d" "%scriptname%-type_tmp.ass"
-wsl sed -i "/,Overlap,,/d" "%scriptname%-type_tmp.ass"
-wsl sed -i "/,Default,,/d" "%scriptname%-type_tmp.ass"
 
 :: Remove everything unused (again)
 py -3 audio\prass\prass.py cleanup "%scriptname%-type_tmp.ass" --styles -o "%scriptname%-type.ass"
