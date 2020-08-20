@@ -32,6 +32,7 @@ if /I "%~x1" EQU ".mkv" (
  set scriptname=%~n1.sub
 )
 
+:: Some checks for posible human errors
 if /I "%~x1" EQU ".srt" set source=srt
 if /I "%~x1" EQU ".ass" set source=ass
 
