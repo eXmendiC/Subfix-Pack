@@ -32,6 +32,9 @@ if /I "%~x1" EQU ".mkv" (
  set scriptname=%~n1.sub
 )
 
+if /I "%~x1" EQU ".srt" set source=srt
+if /I "%~x1" EQU ".ass" set source=ass
+
 if "%source%" EQU "srt" (
 :: That python script is scaling the subtitles and replacing the font
  py -3 audio\prass\prass.py convert-srt "%scriptname%" --encoding utf-8 | py -3 audio\prass\prass.py copy-styles --resolution 1920x1080 --from audio\%template% -o "%scriptname%_srt.ass"
