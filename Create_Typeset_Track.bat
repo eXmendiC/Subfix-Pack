@@ -30,10 +30,14 @@ if /I "%~x1" EQU ".mkv" (
 
 if /I "%~x1" EQU ".srt" (
  ren "%~n1%~x1" "%~n1.sub"
+ set srcname=%~n1%~x1
+ set scriptname=%~n1.sub
 )
 
 if /I "%~x1" EQU ".ass" (
  ren "%~n1%~x1" "%~n1.sub"
+ set srcname=%~n1%~x1
+ set scriptname=%~n1.sub
 )
 
 if "%source%" EQU "srt" (
