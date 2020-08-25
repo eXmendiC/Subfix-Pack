@@ -50,10 +50,12 @@ if "%source%" EQU "ass" (
 py -3 audio\prass\prass.py copy-styles --resample --from audio\%template% --to "%scriptname%" -o "%scriptname%_sfx.ass"
 )
 
-:: This step is important for fixing weird border upscaling with players like mpv
-awk.exe "/\[Script Info\]/ { print; print \"ScaledBorderAndShadow: yes\"; next }1" "%scriptname%_sfx.ass" >"%scriptname%_tmp.ass"
+:: Cleaning the .ass file
+py -3 audio\prass\prass.py cleanup "%scriptname%_sfx.ass" --styles --empty-lines --comments -o "%scriptname%_tmp.ass"
 del "%scriptname%_sfx.ass"
-ren "%scriptname%_tmp.ass" "%scriptname%_sfx.ass"
+:: This step is important for fixing weird border upscaling with players like mpv
+awk.exe "/\[Script Info\]/ { print; print \"ScaledBorderAndShadow: yes\"; next }1" "%scriptname%_tmp.ass" >"%scriptname%_sfx.ass"
+del "%scriptname%_tmp.ass"
 
 
 :: That python script is fixing the German typographie (for exmaple: „“ instead of "")
