@@ -27,7 +27,7 @@ if /I "%~x1" EQU ".mkv" (
  set scriptname=%~n1.sub
  del "%~n1_test%~x1"
 ) else (
- ren "%~n1%~x1" "%~n1.sub"
+ copy "%~n1%~x1" "%~n1.sub"
  set srcname=%~n1%~x1
  set scriptname=%~n1.sub
 )
