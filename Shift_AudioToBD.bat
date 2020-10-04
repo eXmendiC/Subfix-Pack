@@ -9,8 +9,10 @@ echo Just press enter for detault values.
 echo Always use lowercase.
 echo.
 REM ######################
-:: Explanation: https://iamscum.wordpress.com/guides/vfr/
-:: Requirements: WSL version 1 with Ubuntu / Debian / Pengwin & ffmpeg + sox
+:: Explanation & Requirements: https://iamscum.wordpress.com/guides/vfr/
+REM ######################
+:: Change this values to your liking
+set replace=n
 REM ######################
 
 :anew
@@ -42,4 +44,11 @@ mkvmerge --ui-language en --output "%dstname% [%delay%ms].mka" --default-track "
 del "%srcname%_temp.mka"
 move /Y "%dstname% [%delay%ms].mka" ..\..
 echo The delay is %delay%ms
+cd ..\..
+
+:: Audio replacing
+if "%replace%" EQU "y" (
+mkvmerge.exe --ui-language en --output "[NEW] %dstname%" --no-audio  "(" "%dstname%" ")"  --language "1:jpn" "(" "%dstname% [%delay%ms].mka" ")"
+del "%dstname% [%delay%ms].mka"
+)
 PAUSE
