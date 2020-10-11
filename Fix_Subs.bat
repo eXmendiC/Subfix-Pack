@@ -89,11 +89,13 @@ if "%source%" EQU "srt" (
  py -3 audio\prass\prass.py convert-srt "%scriptname%" --encoding utf-8 | py -3 audio\prass\prass.py copy-styles --resolution 1920x1080 --from audio\%template% -o "%scriptname%_srt.ass"
  py -3 audio\amazon-netflix_typeset_split.py "%scriptname%_srt.ass" "%scriptname%_tmp.ass"
  del "%scriptname%_srt.ass"
+ del "%~n1.sub"
  echo Converting completed.
 )
 
 if "%source%" EQU "ass" (
 py -3 audio\prass\prass.py copy-styles --resample --from audio\%template% --to "%scriptname%" -o "%scriptname%_tmp.ass"
+del "%~n1.sub"
 )
 
 if "%shifting%" EQU "1" (
@@ -190,7 +192,6 @@ if "%mux%" EQU "y" (
  del "%videoname%_fixed.mkv"
  del "%scriptname%_fixed.ass"
 )
-del "%~n1.sub"
 
 echo Done.
 PAUSE
