@@ -1,5 +1,8 @@
 @echo off
 :: This script is for subtitles from different sources (timing & font).
+:: It only works on sources with 23.976fps. If your source is different you've to change the following parameters in the code:
+:: "--default-duration" "0:24000/1001p"
+:: --fps 23.976
 REM ######################
 setlocal ENABLEDELAYEDEXPANSION
 echo.
@@ -153,23 +156,23 @@ if "%timefixing%" EQU "y" (
   del "%scriptname%_tmp.ass"
  )
  if "%timefixingmode%" EQU "2" (
-  py -3 audio\prass\prass.py tpp "%scriptname%_tmp.ass" --lead-in 42 --lead-out 42 --gap 210 --overlap 126 --bias 50 --keyframes "%videoname%_fixed.mkv_keyframes.txt" --fps 23.976 --kf-before-start 210 --kf-before-end 210 --kf-after-start 252 --kf-after-end 252    -o "%scriptname%_fixed.ass"
+  py -3 audio\prass\prass.py tpp "%scriptname%_tmp.ass" --lead-in 42 --lead-out 42 --gap 210 --overlap 126 --bias 50 --keyframes "%videoname%_fixed.mkv_keyframes.txt" --fps 23.976 --kf-before-start 210 --kf-before-end 210 --kf-after-start 252 --kf-after-end 252 -o "%scriptname%_fixed.ass"
   del "%scriptname%_tmp.ass"
  )
  if "%timefixingmode%" EQU "3" (
-  py -3 audio\prass\prass.py tpp "%scriptname%_tmp.ass" --lead-in 84 --lead-out 84 --gap 462 --overlap 252 --bias 80 --keyframes "%videoname%_fixed.mkv_keyframes.txt" --fps 23.976 --kf-before-start 210 --kf-before-end 294 --kf-after-start 294 --kf-after-end 294    -o "%scriptname%_fixed.ass"
+  py -3 audio\prass\prass.py tpp "%scriptname%_tmp.ass" --lead-in 84 --lead-out 84 --gap 462 --overlap 252 --bias 80 --keyframes "%videoname%_fixed.mkv_keyframes.txt" --fps 23.976 --kf-before-start 210 --kf-before-end 294 --kf-after-start 294 --kf-after-end 294 -o "%scriptname%_fixed.ass"
   del "%scriptname%_tmp.ass"
  )
  if "%timefixingmode%" EQU "4" (
-  py -3 audio\prass\prass.py tpp "%scriptname%_tmp.ass" --lead-in 128 --lead-out 128 --gap 378 --overlap 210 --bias 80 --keyframes "%videoname%_fixed.mkv_keyframes.txt" --fps 23.976 --kf-before-start 210 --kf-before-end 336 --kf-after-start 294 --kf-after-end 294    -o "%scriptname%_fixed.ass"
+  py -3 audio\prass\prass.py tpp "%scriptname%_tmp.ass" --lead-in 128 --lead-out 128 --gap 378 --overlap 210 --bias 80 --keyframes "%videoname%_fixed.mkv_keyframes.txt" --fps 23.976 --kf-before-start 210 --kf-before-end 336 --kf-after-start 294 --kf-after-end 294 -o "%scriptname%_fixed.ass"
   del "%scriptname%_tmp.ass"
  )
  if "%timefixingmode%" EQU "5" (
-  py -3 audio\prass\prass.py tpp "%scriptname%_tmp.ass" --lead-in 42 --lead-out 42 --gap 378 --overlap 252 --bias 60 --keyframes "%videoname%_fixed.mkv_keyframes.txt" --fps 23.976 --kf-before-start 252 --kf-before-end 336 --kf-after-start 294 --kf-after-end 294    -o "%scriptname%_fixed.ass"
+  py -3 audio\prass\prass.py tpp "%scriptname%_tmp.ass" --lead-in 126 --gap 378 --overlap 252 --bias 30 --keyframes "%videoname%_fixed.mkv_keyframes.txt" --fps 23.976 --kf-before-start 420 --kf-before-end 1008 --kf-after-start 420 --kf-after-end 420 -o "%scriptname%_fixed.ass"
   del "%scriptname%_tmp.ass"
  )
  if "%timefixingmode%" EQU "6" (
-  py -3 audio\prass\prass.py tpp "%scriptname%_tmp.ass" --lead-in 42 --lead-out 0 --gap 252 --overlap 210 --bias 70 --keyframes "%videoname%_fixed.mkv_keyframes.txt" --fps 23.976 --kf-before-start 210 --kf-before-end 336 --kf-after-start 294 --kf-after-end 294    -o "%scriptname%_fixed.ass"
+  py -3 audio\prass\prass.py tpp "%scriptname%_tmp.ass" --lead-in 42 --lead-out 0 --gap 252 --overlap 210 --bias 70 --keyframes "%videoname%_fixed.mkv_keyframes.txt" --fps 23.976 --kf-before-start 210 --kf-before-end 336 --kf-after-start 294 --kf-after-end 294 -o "%scriptname%_fixed.ass"
   del "%scriptname%_tmp.ass"
  )
 )
