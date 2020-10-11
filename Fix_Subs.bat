@@ -168,7 +168,7 @@ if "%timefixing%" EQU "y" (
   del "%scriptname%_tmp.ass"
  )
  if "%timefixingmode%" EQU "5" (
-  py -3 audio\prass\prass.py tpp "%scriptname%_tmp.ass" --lead-in 126 --gap 378 --overlap 252 --bias 30 --keyframes "%videoname%_fixed.mkv_keyframes.txt" --fps 23.976 --kf-before-start 420 --kf-before-end 1008 --kf-after-start 420 --kf-after-end 420 -o "%scriptname%_fixed.ass"
+  py -3 audio\prass\prass.py tpp "%scriptname%_tmp.ass" --lead-in 210 --gap 378 --overlap 252 --bias 30 --keyframes "%videoname%_fixed.mkv_keyframes.txt" --fps 23.976 --kf-before-start 420 --kf-before-end 1008 --kf-after-start 420 --kf-after-end 420 -o "%scriptname%_fixed.ass"
   del "%scriptname%_tmp.ass"
  )
  if "%timefixingmode%" EQU "6" (
@@ -190,6 +190,7 @@ if "%mux%" EQU "y" (
  del "%videoname%_fixed.mkv"
  del "%scriptname%_fixed.ass"
 )
+del "%~n1.sub"
 
 echo Done.
 PAUSE
