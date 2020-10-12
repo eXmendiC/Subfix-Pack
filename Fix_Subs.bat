@@ -174,7 +174,7 @@ if "%timefixing%" EQU "y" (
   del "%scriptname%_tmp.ass"
  )
  if "%timefixingmode%" EQU "6" (
-  py -3 audio\prass\prass.py tpp "%scriptname%_tmp.ass" --lead-in 84 --lead-out 42 --gap 252 --overlap 210 --bias 70 --keyframes "%videoname%_fixed.mkv_keyframes.txt" --fps 23.976 --kf-before-start 210 --kf-before-end 336 --kf-after-start 294 --kf-after-end 294 -o "%scriptname%_fixed.ass"
+  py -3 audio\prass\prass.py tpp "%scriptname%_tmp.ass" --lead-in 84 --lead-out 84 --gap 336 --overlap 210 --bias 60 --keyframes "%videoname%_fixed.mkv_keyframes.txt" --fps 23.976 --kf-before-start 294 --kf-before-end 336 --kf-after-start 294 --kf-after-end 336 -o "%scriptname%_fixed.ass"
   del "%scriptname%_tmp.ass"
  )
 )
