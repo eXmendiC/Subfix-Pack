@@ -22,17 +22,19 @@ echo.
 
 :: Extracting everything and moving it
 ffmpeg -i "%srcname%" -vn -acodec copy "%srcname%_temp.mka"
-ffmpeg -i "%srcname%" "want_sync.wav"
-ffmpeg -i "%dstname%" "have_sync.wav"
+ffmpeg -i "%srcname%" "%srcname%.wav"
+ffmpeg -i "%dstname%" "%dstname%.wav"
 move /Y "%srcname%_temp.mka" audio\sync-audio-tracks
-move /Y "want_sync.wav" audio\sync-audio-tracks
-move /Y "have_sync.wav" audio\sync-audio-tracks
+move /Y "%srcname%.wav" audio\sync-audio-tracks
+move /Y "%dstname%.wav" audio\sync-audio-tracks
 
 :: Generate offset, convert seconds to milliseconds and store them in a text file
 cd audio\sync-audio-tracks
-wsl offset=$(bash -i compute-sound-offset.sh want_sync.wav have_sync.wav 0) ; offset=$(awk "BEGIN {print ($offset*1000)}") ; offset=$(sed "s/\.[^.]*$//" ^<^<^< "$offset") ; echo "$offset" >> offset.txt
-del want_sync.wav
-del have_sync.wav
+wsl srcname=$(sed "s/[[:space:]]//g" ^<^<^< "%srcname%.wav") ; mv "%srcname%.wav" $srcname
+wsl dstname=$(sed "s/[[:space:]]//g" ^<^<^< "%dstname%.wav") ; mv "%dstname%.wav" $dstname
+wsl srcname=$(sed "s/[[:space:]]//g" ^<^<^< "%srcname%.wav") ; dstname=$(sed "s/[[:space:]]//g" ^<^<^< "%dstname%.wav") ; offset=$(bash -i compute-sound-offset.sh "$srcname" "$dstname" 0) ; offset=$(awk "BEGIN {print ($offset*1000)}") ; offset=$(sed "s/\.[^.]*$//" ^<^<^< "$offset") ; echo "$offset" >> offset.txt
+wsl srcname=$(sed "s/[[:space:]]//g" ^<^<^< "%srcname%.wav") ; rm $srcname
+wsl dstname=$(sed "s/[[:space:]]//g" ^<^<^< "%dstname%.wav") ; rm $dstname
 
 :: Store delay inside variable
 set /p delay=< offset.txt
