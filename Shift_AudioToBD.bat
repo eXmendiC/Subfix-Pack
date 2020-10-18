@@ -38,7 +38,6 @@ wsl dstname=$(sed "s/[[:space:]]//g" ^<^<^< "%dstname%.wav") ; rm $dstname
 
 :: Store delay inside variable
 set /p delay=< "%dstname%".txt
-echo The delay is %delay%.
 del "%dstname%".txt
 
 :: Muxing it with a delay (no quality loss since no converting)
