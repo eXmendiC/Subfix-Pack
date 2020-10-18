@@ -32,14 +32,14 @@ move /Y "%dstname%.wav" audio\sync-audio-tracks
 cd audio\sync-audio-tracks
 wsl srcname=$(sed "s/[[:space:]]//g" ^<^<^< "%srcname%.wav") ; mv "%srcname%.wav" $srcname
 wsl dstname=$(sed "s/[[:space:]]//g" ^<^<^< "%dstname%.wav") ; mv "%dstname%.wav" $dstname
-wsl srcname=$(sed "s/[[:space:]]//g" ^<^<^< "%srcname%.wav") ; dstname=$(sed "s/[[:space:]]//g" ^<^<^< "%dstname%.wav") ; offset=$(bash -i compute-sound-offset.sh "$srcname" "$dstname" 0) ; offset=$(awk "BEGIN {print ($offset*1000)}") ; offset=$(sed "s/\.[^.]*$//" ^<^<^< "$offset") ; echo "$offset" >> offset.txt
+wsl srcname=$(sed "s/[[:space:]]//g" ^<^<^< "%srcname%.wav") ; dstname=$(sed "s/[[:space:]]//g" ^<^<^< "%dstname%.wav") ; offset=$(bash -i compute-sound-offset.sh "$srcname" "$dstname" 0) ; offset=$(awk "BEGIN {print ($offset*1000)}") ; offset=$(sed "s/\.[^.]*$//" ^<^<^< "$offset") ; echo "$offset" >> "%dstname%".txt
 wsl srcname=$(sed "s/[[:space:]]//g" ^<^<^< "%srcname%.wav") ; rm $srcname
 wsl dstname=$(sed "s/[[:space:]]//g" ^<^<^< "%dstname%.wav") ; rm $dstname
 
 :: Store delay inside variable
-set /p delay=< offset.txt
-echo %delay%
-del offset.txt
+set /p delay=< "%dstname%".txt
+echo The delay is %delay%.
+del "%dstname%".txt
 
 :: Muxing it with a delay (no quality loss since no converting)
 mkvmerge --ui-language en --output "%dstname% [%delay%ms].mka" --default-track "0:yes" --track-name "0:%delay%ms" --sync "0:%delay%" "(" "%srcname%_temp.mka" ")"
