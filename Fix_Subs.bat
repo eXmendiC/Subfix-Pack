@@ -23,6 +23,7 @@ set shifting=0
 set secpass=y
 set mux=y
 set typo=n
+set italic_honorifics=n
 set template=template_advanced.ass
 set font=font1.ttf
 set font2=font1i.ttf
@@ -184,6 +185,12 @@ if "%timefixing%" EQU "y" (
 if "%typo%" EQU "y" (
  ren "%scriptname%_fixed.ass" "%scriptname%-needfix.ass"
  py -3 audio\fuehre_mich.py "%scriptname%-needfix.ass" "%scriptname%_fixed.ass"
+ del "%scriptname%-needfix.ass"
+)
+
+if "%italic_honorifics%" EQU "y" (
+ ren "%scriptname%_fixed.ass" "%scriptname%-needfix.ass"
+ py -3 audio\funimation_honorifics.py "%scriptname%-needfix.ass" "%scriptname%_fixed.ass"
  del "%scriptname%-needfix.ass"
 )
 
