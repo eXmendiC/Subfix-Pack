@@ -190,7 +190,7 @@ if "%german_typographie%" EQU "y" (
 
 if "%italic_honorifics%" EQU "y" (
  ren "%scriptname%_fixed.ass" "%scriptname%-needfix.ass"
- py -3 audio\funimation_honorifics.py "%scriptname%-needfix.ass" "%scriptname%_fixed.ass"
+ py -3 audio\scripts\funimation_honorifics.py "%scriptname%-needfix.ass" "%scriptname%_fixed.ass"
  del "%scriptname%-needfix.ass"
 )
 
