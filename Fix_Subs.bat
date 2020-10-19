@@ -22,7 +22,7 @@ set timefixingmode=3
 set shifting=0
 set secpass=y
 set mux=y
-set typo=n
+set german_typographie=n
 set italic_honorifics=n
 set template=template_advanced.ass
 set font=font1.ttf
@@ -182,7 +182,7 @@ if "%timefixing%" EQU "y" (
 
 :NSU
 
-if "%typo%" EQU "y" (
+if "%german_typographie%" EQU "y" (
  ren "%scriptname%_fixed.ass" "%scriptname%-needfix.ass"
  py -3 audio\fuehre_mich.py "%scriptname%-needfix.ass" "%scriptname%_fixed.ass"
  del "%scriptname%-needfix.ass"
