@@ -16,40 +16,40 @@ set replace=n
 REM ######################
 
 :anew
-set /p srcname=Audio you want to sync (e.g. TestTV.mkv): 
-set /p dstname=Audio that is already synced (e.g. TestBD.mkv): 
+set /p want_sync=Audio you want to sync (e.g. TestTV.mkv): 
+set /p is_sync=Audio that is already synced (e.g. TestBD.mkv): 
 echo.
 
 :: Extracting everything and moving it
-ffmpeg -i "%srcname%" -vn -acodec copy "%srcname%_temp.mka"
-ffmpeg -i "%srcname%" "%srcname%.wav"
-ffmpeg -i "%dstname%" "%dstname%.wav"
-move /Y "%srcname%_temp.mka" audio\sync-audio-tracks
-move /Y "%srcname%.wav" audio\sync-audio-tracks
-move /Y "%dstname%.wav" audio\sync-audio-tracks
+ffmpeg -i "%want_sync%" -vn -acodec copy "%want_sync%_temp.mka"
+ffmpeg -i "%want_sync%" "%want_sync%.wav"
+ffmpeg -i "%is_sync%" "%is_sync%.wav"
+move /Y "%want_sync%_temp.mka" audio\sync-audio-tracks
+move /Y "%want_sync%.wav" audio\sync-audio-tracks
+move /Y "%is_sync%.wav" audio\sync-audio-tracks
 
 :: Generate offset, convert seconds to milliseconds and store them in a text file
 cd audio\sync-audio-tracks
-wsl srcname=$(sed "s/[[:space:]]//g" ^<^<^< "%srcname%.wav") ; mv "%srcname%.wav" $srcname
-wsl dstname=$(sed "s/[[:space:]]//g" ^<^<^< "%dstname%.wav") ; mv "%dstname%.wav" $dstname
-wsl srcname=$(sed "s/[[:space:]]//g" ^<^<^< "%srcname%.wav") ; dstname=$(sed "s/[[:space:]]//g" ^<^<^< "%dstname%.wav") ; offset=$(bash -i compute-sound-offset.sh "$srcname" "$dstname" 0) ; offset=$(awk "BEGIN {print ($offset*1000)}") ; offset=$(sed "s/\.[^.]*$//" ^<^<^< "$offset") ; echo "$offset" >> "%dstname%".txt
-wsl srcname=$(sed "s/[[:space:]]//g" ^<^<^< "%srcname%.wav") ; rm $srcname
-wsl dstname=$(sed "s/[[:space:]]//g" ^<^<^< "%dstname%.wav") ; rm $dstname
+wsl want_sync=$(sed "s/[[:space:]]//g" ^<^<^< "%want_sync%.wav") ; mv "%want_sync%.wav" $want_sync
+wsl is_sync=$(sed "s/[[:space:]]//g" ^<^<^< "%is_sync%.wav") ; mv "%is_sync%.wav" $is_sync
+wsl want_sync=$(sed "s/[[:space:]]//g" ^<^<^< "%want_sync%.wav") ; is_sync=$(sed "s/[[:space:]]//g" ^<^<^< "%is_sync%.wav") ; offset=$(bash -i compute-sound-offset.sh "$want_sync" "$is_sync" 0) ; offset=$(awk "BEGIN {print ($offset*1000)}") ; offset=$(sed "s/\.[^.]*$//" ^<^<^< "$offset") ; echo "$offset" >> "%is_sync%".txt
+wsl want_sync=$(sed "s/[[:space:]]//g" ^<^<^< "%want_sync%.wav") ; rm $want_sync
+wsl is_sync=$(sed "s/[[:space:]]//g" ^<^<^< "%is_sync%.wav") ; rm $is_sync
 
 :: Store delay inside variable
-set /p delay=< "%dstname%".txt
-del "%dstname%".txt
+set /p delay=< "%is_sync%".txt
+del "%is_sync%".txt
 
 :: Muxing it with a delay (no quality loss since no converting)
-mkvmerge --ui-language en --output "%dstname% [%delay%ms].mka" --default-track "0:yes" --track-name "0:%delay%ms" --sync "0:%delay%" "(" "%srcname%_temp.mka" ")"
-del "%srcname%_temp.mka"
-move /Y "%dstname% [%delay%ms].mka" ..\..
+mkvmerge --ui-language en --output "%is_sync% [%delay%ms].mka" --default-track "0:yes" --track-name "0:%delay%ms" --sync "0:%delay%" "(" "%want_sync%_temp.mka" ")"
+del "%want_sync%_temp.mka"
+move /Y "%is_sync% [%delay%ms].mka" ..\..
 echo The delay is %delay%ms
 cd ..\..
 
 :: Audio replacing
 if "%replace%" EQU "y" (
-mkvmerge.exe --ui-language en --output "[NEW] %dstname%" --no-audio  "(" "%dstname%" ")"  --language "1:jpn" "(" "%dstname% [%delay%ms].mka" ")"
-del "%dstname% [%delay%ms].mka"
+mkvmerge.exe --ui-language en --output "[NEW] %is_sync%" --no-audio  "(" "%is_sync%" ")"  --language "1:jpn" "(" "%is_sync% [%delay%ms].mka" ")"
+del "%is_sync% [%delay%ms].mka"
 )
 PAUSE
