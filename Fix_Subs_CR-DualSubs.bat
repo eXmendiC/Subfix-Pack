@@ -60,42 +60,42 @@ if NOT exist "%videoname%_fixed.mkv" (
 )
 
 ::That python script is replacing the font
-py -3 audio\prass\prass.py copy-styles --resample --from audio\%template% --to "%scriptname%" -o "%scriptname%_tmp.ass"
+py -3 tools\prass\prass.py copy-styles --resample --from custom\%template% --to "%scriptname%" -o "%scriptname%_tmp.ass"
 
 :: Shifting the subs a few frames forward or backward
 if "%shifting%" EQU "1" (
  ren "%scriptname%_tmp.ass" "%scriptname%_tmp2.ass"
- py -3 audio\prass\prass.py shift --by 42ms "%scriptname%_tmp2.ass" -o "%scriptname%_tmp.ass"
+ py -3 tools\prass\prass.py shift --by 42ms "%scriptname%_tmp2.ass" -o "%scriptname%_tmp.ass"
  del "%scriptname%_tmp2.ass"
 )
 
 if "%shifting%" EQU "-1" (
  ren "%scriptname%_tmp.ass" "%scriptname%_tmp2.ass"
- py -3 audio\prass\prass.py shift --by -42ms "%scriptname%_tmp2.ass" -o "%scriptname%_tmp.ass"
+ py -3 tools\prass\prass.py shift --by -42ms "%scriptname%_tmp2.ass" -o "%scriptname%_tmp.ass"
  del "%scriptname%_tmp2.ass"
 )
 
 if "%shifting%" EQU "2" (
  ren "%scriptname%_tmp.ass" "%scriptname%_tmp2.ass"
- py -3 audio\prass\prass.py shift --by 84ms "%scriptname%_tmp2.ass" -o "%scriptname%_tmp.ass"
+ py -3 tools\prass\prass.py shift --by 84ms "%scriptname%_tmp2.ass" -o "%scriptname%_tmp.ass"
  del "%scriptname%_tmp2.ass"
 )
 
 if "%shifting%" EQU "-2" (
  ren "%scriptname%_tmp.ass" "%scriptname%_tmp2.ass"
- py -3 audio\prass\prass.py shift --by -84ms "%scriptname%_tmp2.ass" -o "%scriptname%_tmp.ass"
+ py -3 tools\prass\prass.py shift --by -84ms "%scriptname%_tmp2.ass" -o "%scriptname%_tmp.ass"
  del "%scriptname%_tmp2.ass"
 )
 
 if "%shifting%" EQU "24" (
  ren "%scriptname%_tmp.ass" "%scriptname%_tmp2.ass"
- py -3 audio\prass\prass.py shift --by 1001ms "%scriptname%_tmp2.ass" -o "%scriptname%_tmp.ass"
+ py -3 tools\prass\prass.py shift --by 1001ms "%scriptname%_tmp2.ass" -o "%scriptname%_tmp.ass"
  del "%scriptname%_tmp2.ass"
 )
 
 if "%shifting%" EQU "-24" (
  ren "%scriptname%_tmp.ass" "%scriptname%_tmp2.ass"
- py -3 audio\prass\prass.py shift --by -1001ms "%scriptname%_tmp2.ass" -o "%scriptname%_tmp.ass"
+ py -3 tools\prass\prass.py shift --by -1001ms "%scriptname%_tmp2.ass" -o "%scriptname%_tmp.ass"
  del "%scriptname%_tmp2.ass"
 )
 
@@ -113,7 +113,7 @@ if "%timefixing%" EQU "y" (
   ffmpeg -i "%videoname%_fixed.mkv" -f yuv4mpegpipe -vf scale=640:360 -pix_fmt yuv420p -vsync drop - | SCXvid "%videoname%_fixed.mkv_keyframes.txt"
   echo Keyframes completed.
   )
-  py -3 audio\prass\prass.py tpp "%scriptname%_tmp.ass" --lead-in 42 --lead-out 42 --gap 210 --overlap 126 --bias 100 --keyframes "%videoname%_fixed.mkv_keyframes.txt" --fps 23.976 --kf-before-start 210 --kf-before-end 210 --kf-after-start 252 --kf-after-end 252    -o "%scriptname%_fixed.ass"
+  py -3 tools\prass\prass.py tpp "%scriptname%_tmp.ass" --lead-in 42 --lead-out 42 --gap 210 --overlap 126 --bias 100 --keyframes "%videoname%_fixed.mkv_keyframes.txt" --fps 23.976 --kf-before-start 210 --kf-before-end 210 --kf-after-start 252 --kf-after-end 252    -o "%scriptname%_fixed.ass"
   del "%scriptname%_tmp.ass"
  )
 )
@@ -136,7 +136,7 @@ ren "%scriptname%_fixed1.ass" "%scriptname%_ger.ass"
 :: Muxing the subtitles and audio
 :: You might want to change the "--language" or "--default-duration" here
 if "%mux%" EQU "y" (
-  mkvmerge -o "%videoname%_final.mkv"  "--language" "0:jpn" "--default-track" "0:yes" "--default-duration" "0:24000/1001p" "--language" "1:jpn" "--default-track" "1:yes" "-a" "1" "-d" "0" "-S" "-T" "(" "%videoname%_fixed.mkv" ")" "--sub-charset" "0:UTF-8" "--language" "0:ger"  "--track-name" "0:Deutsch"  "--default-track" "0:yes" "-s" "0" "-D" "-A" "-T" "(" "%scriptname%_ger.ass" ")" "--sub-charset" "0:UTF-8" "--language" "0:eng" "--track-name" "0:English" "--default-track" "0:no" "-s" "0" "-D" "-A" "-T" "(" "%scriptname%_eng.ass" ")" "--track-order" "0:0,0:1,1:0,2:0" "--attachment-mime-type" "application/vnd.ms-opentype" "--attachment-name" "%font%" "--attach-file" "audio\%font%" "--attachment-mime-type" "application/vnd.ms-opentype" "--attachment-name" "%font2%" "--attach-file" "audio\%font2%"
+  mkvmerge -o "%videoname%_final.mkv"  "--language" "0:jpn" "--default-track" "0:yes" "--default-duration" "0:24000/1001p" "--language" "1:jpn" "--default-track" "1:yes" "-a" "1" "-d" "0" "-S" "-T" "(" "%videoname%_fixed.mkv" ")" "--sub-charset" "0:UTF-8" "--language" "0:ger"  "--track-name" "0:Deutsch"  "--default-track" "0:yes" "-s" "0" "-D" "-A" "-T" "(" "%scriptname%_ger.ass" ")" "--sub-charset" "0:UTF-8" "--language" "0:eng" "--track-name" "0:English" "--default-track" "0:no" "-s" "0" "-D" "-A" "-T" "(" "%scriptname%_eng.ass" ")" "--track-order" "0:0,0:1,1:0,2:0" "--attachment-mime-type" "application/vnd.ms-opentype" "--attachment-name" "%font%" "--attach-file" "custom\%font%" "--attachment-mime-type" "application/vnd.ms-opentype" "--attachment-name" "%font2%" "--attach-file" "custom\%font2%"
   del "%videoname%_fixed.mkv"
  )
 )

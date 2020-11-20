@@ -62,18 +62,18 @@ if NOT exist "%videoname%_fixed.mkv" (
  
 if "%source%" EQU "srt" (
 :: That python script is scaling the subtitles and replacing the font
-py -3 audio\prass\prass.py convert-srt "%scriptname%" --encoding utf-8 | py -3 audio\prass\prass.py copy-styles --resolution 1920x1080 --from audio\%template% -o "%scriptname%_srt.ass"
+py -3 tools\prass\prass.py convert-srt "%scriptname%" --encoding utf-8 | py -3 tools\prass\prass.py copy-styles --resolution 1920x1080 --from custom\%template% -o "%scriptname%_srt.ass"
  :: That python script is detecting typeset and making it "/an8" (top)
- py -3 audio\amazon-netflix_typeset_split.py "%scriptname%_srt.ass" "%scriptname%_tmp.ass"
+ py -3 tools\amazon-netflix_typeset_split.py "%scriptname%_srt.ass" "%scriptname%_tmp.ass"
  del "%scriptname%_srt.ass"
   echo Converting srt to ass successful
 )
 
 if "%source%" EQU "ass" (
 :: That python script is and replacing the font
-py -3 audio\prass\prass.py copy-styles --resample --from audio\%template% --to "%scriptname%" -o "%scriptname%_srt.ass"
+py -3 tools\prass\prass.py copy-styles --resample --from custom\%template% --to "%scriptname%" -o "%scriptname%_srt.ass"
  :: That python script is detecting typeset and making it "/an8" (top)
- py -3 audio\amazon-netflix_typeset_split.py "%scriptname%_srt.ass" "%scriptname%_tmp.ass"
+ py -3 tools\amazon-netflix_typeset_split.py "%scriptname%_srt.ass" "%scriptname%_tmp.ass"
 )
 
 
@@ -90,7 +90,7 @@ if "%timefixing%" EQU "y" (
   ffmpeg -i "%videoname%_fixed.mkv" -f yuv4mpegpipe -vf scale=640:360 -pix_fmt yuv420p -vsync drop - | SCXvid "%videoname%_fixed.mkv_keyframes.txt"
   echo Keyframes completed.
   )
-  py -3 audio\prass\prass.py tpp "%scriptname%_tmp.ass" --lead-in 84 --lead-out 84 --gap 462 --overlap 252 --bias 80 --keyframes "%videoname%_fixed.mkv_keyframes.txt" --fps 23.976 --kf-before-start 210 --kf-before-end 294 --kf-after-start 294 --kf-after-end 294    -o "%scriptname%_fixed.ass"
+  py -3 tools\prass\prass.py tpp "%scriptname%_tmp.ass" --lead-in 84 --lead-out 84 --gap 462 --overlap 252 --bias 80 --keyframes "%videoname%_fixed.mkv_keyframes.txt" --fps 23.976 --kf-before-start 210 --kf-before-end 294 --kf-after-start 294 --kf-after-end 294    -o "%scriptname%_fixed.ass"
   del "%scriptname%_tmp.ass"
  )
 )
@@ -110,14 +110,14 @@ ren "%scriptname%_fixed1.ass" "%scriptname%_ger.ass"
 :: That python script is fixing the German typographie (for exmaple: „“ instead of "")
 if "%typo%" EQU "y" (
 ren "%scriptname%_ger.ass" "%scriptname%_ger-needfix.ass"
-py -3 audio\fuehre_mich.py "%scriptname%_ger-needfix.ass" "%scriptname%_ger.ass"
+py -3 tools\fuehre_mich.py "%scriptname%_ger-needfix.ass" "%scriptname%_ger.ass"
 del "%scriptname%_ger-needfix.ass"
 )
 
 :: Muxing the subtitles and audio
 :: You might want to change the "--language" or "--default-duration" here
 if "%mux%" EQU "y" (
-  mkvmerge -o "%videoname%_final.mkv"  "--language" "0:jpn" "--default-track" "0:yes" "--default-duration" "0:24000/1001p" "--language" "1:jpn" "--default-track" "1:yes" "-a" "1" "-d" "0" "-S" "-T" "(" "%videoname%_fixed.mkv" ")" "--sub-charset" "0:UTF-8" "--language" "0:ger"  "--track-name" "0:Deutsch"  "--default-track" "0:yes" "-s" "0" "-D" "-A" "-T" "(" "%scriptname%_ger.ass" ")" "--sub-charset" "0:UTF-8" "--language" "0:eng" "--track-name" "0:English" "--default-track" "0:no" "-s" "0" "-D" "-A" "-T" "(" "%scriptname%_eng.ass" ")" "--track-order" "0:0,0:1,1:0,2:0" "--attachment-mime-type" "application/vnd.ms-opentype" "--attachment-name" "%font%" "--attach-file" "audio\%font%" "--attachment-mime-type" "application/vnd.ms-opentype" "--attachment-name" "%font2%" "--attach-file" "audio\%font2%"
+  mkvmerge -o "%videoname%_final.mkv"  "--language" "0:jpn" "--default-track" "0:yes" "--default-duration" "0:24000/1001p" "--language" "1:jpn" "--default-track" "1:yes" "-a" "1" "-d" "0" "-S" "-T" "(" "%videoname%_fixed.mkv" ")" "--sub-charset" "0:UTF-8" "--language" "0:ger"  "--track-name" "0:Deutsch"  "--default-track" "0:yes" "-s" "0" "-D" "-A" "-T" "(" "%scriptname%_ger.ass" ")" "--sub-charset" "0:UTF-8" "--language" "0:eng" "--track-name" "0:English" "--default-track" "0:no" "-s" "0" "-D" "-A" "-T" "(" "%scriptname%_eng.ass" ")" "--track-order" "0:0,0:1,1:0,2:0" "--attachment-mime-type" "application/vnd.ms-opentype" "--attachment-name" "%font%" "--attach-file" "custom\%font%" "--attachment-mime-type" "application/vnd.ms-opentype" "--attachment-name" "%font2%" "--attach-file" "custom\%font2%"
   del "%videoname%_fixed.mkv"
  )
 )

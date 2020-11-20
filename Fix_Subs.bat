@@ -29,6 +29,7 @@ set font=font1.ttf
 set font2=font1i.ttf
 REM ######################
 
+:: Extract subtitle from source
 if "%extract%" EQU "y" (
  mkvmerge --ui-language en --output "%~n1_test%~x1" --no-audio --no-video --no-attachments --no-chapters "(" "%~n1%~x1" ")"
  mkvextract --ui-language en tracks "%~n1_test%~x1" 0:"%~n1.sub"
@@ -73,12 +74,13 @@ set /p mux=Mux everything together at the end (y/n) [mux]:
 echo.
 echo Start fixing...
 
+:: A second muxing for setting the correct fps and removing audio delay
+:: You might want to change the "0:24000/1001p" aka fps here
 if "%secpass%" EQU "y" (
  if NOT exist "%videoname%_fixed.mkv" (
  mkvmerge -o "%videoname%_fixed.mkv" "--no-subtitles" "--default-duration" "0:24000/1001p" "--fix-bitstream-timing-information" "0:1" "%videoname%"
  )
 )
-
 if "%secpass%" EQU "n" (
  if NOT exist "%videoname%_fixed.mkv" (
  copy "%videoname%" "%videoname%_fixed.mkv"
@@ -87,57 +89,68 @@ if "%secpass%" EQU "n" (
  
 if "%source%" EQU "srt" (
  echo Converting srt to ass...
- py -3 audio\prass\prass.py convert-srt "%scriptname%" --encoding utf-8 | py -3 audio\prass\prass.py copy-styles --resolution 1920x1080 --from audio\%template% -o "%scriptname%_srt.ass"
- py -3 audio\amazon-netflix_typeset_split.py "%scriptname%_srt.ass" "%scriptname%_tmp.ass"
+ :: That python script is scaling the subtitles and replacing the font
+ py -3 tools\prass\prass.py convert-srt "%scriptname%" --encoding utf-8 | py -3 tools\prass\prass.py copy-styles --resolution 1920x1080 --from custom\%template% -o "%scriptname%_srt.ass"
+ :: That python script is detecting typeset and making it "/an8" (top)
+ py -3 tools\amazon-netflix_typeset_split.py "%scriptname%_srt.ass" "%scriptname%_tmp.ass"
  del "%scriptname%_srt.ass"
  del "%~n1.sub"
  echo Converting completed.
 )
 
 if "%source%" EQU "ass" (
-py -3 audio\prass\prass.py copy-styles --resample --from audio\%template% --to "%scriptname%" -o "%scriptname%_tmp.ass"
+:: That python script is and replacing the font
+py -3 tools\prass\prass.py copy-styles --resample --from custom\%template% --to "%scriptname%" -o "%scriptname%_tmp.ass"
 del "%~n1.sub"
 )
 
+:: Shifting the subs a few frames forward or backward
 if "%shifting%" EQU "1" (
  ren "%scriptname%_tmp.ass" "%scriptname%_tmp2.ass"
- py -3 audio\prass\prass.py shift --by 42ms "%scriptname%_tmp2.ass" -o "%scriptname%_tmp.ass"
+ py -3 tools\prass\prass.py shift --by 42ms "%scriptname%_tmp2.ass" -o "%scriptname%_tmp.ass"
  del "%scriptname%_tmp2.ass"
 )
 
 if "%shifting%" EQU "-1" (
  ren "%scriptname%_tmp.ass" "%scriptname%_tmp2.ass"
- py -3 audio\prass\prass.py shift --by -42ms "%scriptname%_tmp2.ass" -o "%scriptname%_tmp.ass"
+ py -3 tools\prass\prass.py shift --by -42ms "%scriptname%_tmp2.ass" -o "%scriptname%_tmp.ass"
  del "%scriptname%_tmp2.ass"
 )
 
 if "%shifting%" EQU "2" (
  ren "%scriptname%_tmp.ass" "%scriptname%_tmp2.ass"
- py -3 audio\prass\prass.py shift --by 84ms "%scriptname%_tmp2.ass" -o "%scriptname%_tmp.ass"
+ py -3 tools\prass\prass.py shift --by 84ms "%scriptname%_tmp2.ass" -o "%scriptname%_tmp.ass"
  del "%scriptname%_tmp2.ass"
 )
 
 if "%shifting%" EQU "-2" (
  ren "%scriptname%_tmp.ass" "%scriptname%_tmp2.ass"
- py -3 audio\prass\prass.py shift --by -84ms "%scriptname%_tmp2.ass" -o "%scriptname%_tmp.ass"
+ py -3 tools\prass\prass.py shift --by -84ms "%scriptname%_tmp2.ass" -o "%scriptname%_tmp.ass"
  del "%scriptname%_tmp2.ass"
 )
 
 if "%shifting%" EQU "24" (
  ren "%scriptname%_tmp.ass" "%scriptname%_tmp2.ass"
- py -3 audio\prass\prass.py shift --by 1001ms "%scriptname%_tmp2.ass" -o "%scriptname%_tmp.ass"
+ py -3 tools\prass\prass.py shift --by 1001ms "%scriptname%_tmp2.ass" -o "%scriptname%_tmp.ass"
  del "%scriptname%_tmp2.ass"
 )
 
 if "%shifting%" EQU "-24" (
  ren "%scriptname%_tmp.ass" "%scriptname%_tmp2.ass"
- py -3 audio\prass\prass.py shift --by -1001ms "%scriptname%_tmp2.ass" -o "%scriptname%_tmp.ass"
+ py -3 tools\prass\prass.py shift --by -1001ms "%scriptname%_tmp2.ass" -o "%scriptname%_tmp.ass"
  del "%scriptname%_tmp2.ass"
 )
 
+:: Cleaning the .ass file
+py -3 audio\prass\prass.py cleanup "%scriptname%_tmp.ass" --styles --empty-lines --comments -o "%scriptname%_tmp2.ass"
+del "%scriptname%_tmp.ass"
+ren "%scriptname%_tmp2.ass" "%scriptname%_tmp.ass"
+
+:: This step is important for fixing weird border upscaling with players like mpv
 awk "/\[Script Info\]/ { print; print \"ScaledBorderAndShadow: yes\"; next }1" "%scriptname%_tmp.ass" >"%scriptname%_tmp2.ass"
 del "%scriptname%_tmp.ass"
 ren "%scriptname%_tmp2.ass" "%scriptname%_tmp.ass"
+
 
 if "%timefixing%" EQU "n" (
  ren "%scriptname%_tmp.ass" "%scriptname%_fixed.ass"
@@ -148,6 +161,8 @@ if "%timefixingmode%" EQU "0" (
  goto NSU
 )
 
+:: Creating keyframes & fixing timing
+:: You might want to change the "fps" here
 if "%timefixing%" EQU "y" (
  if NOT exist "%videoname%_fixed.mkv_keyframes.txt" (
   echo Generate keyframes...
@@ -155,47 +170,51 @@ if "%timefixing%" EQU "y" (
   echo Keyframes completed.
   )
  if "%timefixingmode%" EQU "1" (
-  py -3 audio\prass\prass.py tpp "%scriptname%_tmp.ass" --lead-in 42 --lead-out 42 --gap 210 --overlap 126 --bias 50 --keyframes "%videoname%_fixed.mkv_keyframes.txt" --fps 23.976 --kf-before-start 210 --kf-before-end 252 --kf-after-start 210 --kf-after-end 252 -o "%scriptname%_fixed.ass"
+  py -3 tools\prass\prass.py tpp "%scriptname%_tmp.ass" --lead-in 42 --lead-out 42 --gap 210 --overlap 126 --bias 50 --keyframes "%videoname%_fixed.mkv_keyframes.txt" --fps 23.976 --kf-before-start 210 --kf-before-end 252 --kf-after-start 210 --kf-after-end 252 -o "%scriptname%_fixed.ass"
   del "%scriptname%_tmp.ass"
  )
  if "%timefixingmode%" EQU "2" (
-  py -3 audio\prass\prass.py tpp "%scriptname%_tmp.ass" --lead-in 42 --lead-out 42 --gap 336 --overlap 210 --bias 60 --keyframes "%videoname%_fixed.mkv_keyframes.txt" --fps 23.976 --kf-before-start 252 --kf-before-end 294 --kf-after-start 252 --kf-after-end 294 -o "%scriptname%_fixed.ass"
+  py -3 tools\prass\prass.py tpp "%scriptname%_tmp.ass" --lead-in 42 --lead-out 42 --gap 336 --overlap 210 --bias 60 --keyframes "%videoname%_fixed.mkv_keyframes.txt" --fps 23.976 --kf-before-start 252 --kf-before-end 294 --kf-after-start 252 --kf-after-end 294 -o "%scriptname%_fixed.ass"
   del "%scriptname%_tmp.ass"
  )
  if "%timefixingmode%" EQU "3" (
-  py -3 audio\prass\prass.py tpp "%scriptname%_tmp.ass" --lead-in 84 --lead-out 84 --gap 462 --overlap 252 --bias 80 --keyframes "%videoname%_fixed.mkv_keyframes.txt" --fps 23.976 --kf-before-start 294 --kf-before-end 294 --kf-after-start 294 --kf-after-end 294 -o "%scriptname%_fixed.ass"
+  py -3 tools\prass\prass.py tpp "%scriptname%_tmp.ass" --lead-in 84 --lead-out 84 --gap 462 --overlap 252 --bias 80 --keyframes "%videoname%_fixed.mkv_keyframes.txt" --fps 23.976 --kf-before-start 294 --kf-before-end 294 --kf-after-start 294 --kf-after-end 294 -o "%scriptname%_fixed.ass"
   del "%scriptname%_tmp.ass"
  )
  if "%timefixingmode%" EQU "4" (
-  py -3 audio\prass\prass.py tpp "%scriptname%_tmp.ass" --lead-in 126 --lead-out 126 --gap 378 --overlap 210 --bias 80 --keyframes "%videoname%_fixed.mkv_keyframes.txt" --fps 23.976 --kf-before-start 210 --kf-before-end 336 --kf-after-start 294 --kf-after-end 294 -o "%scriptname%_fixed.ass"
+  py -3 tools\prass\prass.py tpp "%scriptname%_tmp.ass" --lead-in 126 --lead-out 126 --gap 378 --overlap 210 --bias 80 --keyframes "%videoname%_fixed.mkv_keyframes.txt" --fps 23.976 --kf-before-start 210 --kf-before-end 336 --kf-after-start 294 --kf-after-end 294 -o "%scriptname%_fixed.ass"
   del "%scriptname%_tmp.ass"
  )
  if "%timefixingmode%" EQU "5" (
-  py -3 audio\prass\prass.py tpp "%scriptname%_tmp.ass" --lead-in 210 --gap 378 --overlap 252 --bias 30 --keyframes "%videoname%_fixed.mkv_keyframes.txt" --fps 23.976 --kf-before-start 420 --kf-before-end 1008 --kf-after-start 420 --kf-after-end 420 -o "%scriptname%_fixed.ass"
+  py -3 tools\prass\prass.py tpp "%scriptname%_tmp.ass" --lead-in 210 --gap 378 --overlap 252 --bias 30 --keyframes "%videoname%_fixed.mkv_keyframes.txt" --fps 23.976 --kf-before-start 420 --kf-before-end 1008 --kf-after-start 420 --kf-after-end 420 -o "%scriptname%_fixed.ass"
   del "%scriptname%_tmp.ass"
  )
  if "%timefixingmode%" EQU "6" (
-  py -3 audio\prass\prass.py tpp "%scriptname%_tmp.ass" --lead-in 84 --lead-out 84 --gap 336 --overlap 210 --bias 60 --keyframes "%videoname%_fixed.mkv_keyframes.txt" --fps 23.976 --kf-before-start 294 --kf-before-end 336 --kf-after-start 294 --kf-after-end 336 -o "%scriptname%_fixed.ass"
+  py -3 tools\prass\prass.py tpp "%scriptname%_tmp.ass" --lead-in 84 --lead-out 84 --gap 336 --overlap 210 --bias 60 --keyframes "%videoname%_fixed.mkv_keyframes.txt" --fps 23.976 --kf-before-start 294 --kf-before-end 336 --kf-after-start 294 --kf-after-end 336 -o "%scriptname%_fixed.ass"
   del "%scriptname%_tmp.ass"
  )
 )
 
 :NSU
 
+:: That python script is fixing the German typographie (for exmaple: „“ instead of "")
 if "%german_typographie%" EQU "y" (
  ren "%scriptname%_fixed.ass" "%scriptname%-needfix.ass"
- py -3 audio\fuehre_mich.py "%scriptname%-needfix.ass" "%scriptname%_fixed.ass"
+ py -3 tools\fuehre_mich.py "%scriptname%-needfix.ass" "%scriptname%_fixed.ass"
  del "%scriptname%-needfix.ass"
 )
 
+:: That python script is fixing italic honorifics
 if "%italic_honorifics%" EQU "y" (
  ren "%scriptname%_fixed.ass" "%scriptname%-needfix.ass"
- py -3 audio\scripts\funimation_honorifics.py "%scriptname%-needfix.ass" "%scriptname%_fixed.ass"
+ py -3 tools\funimation_honorifics.py "%scriptname%-needfix.ass" "%scriptname%_fixed.ass"
  del "%scriptname%-needfix.ass"
 )
 
+:: Muxing the subtitles and audio
+:: You might want to change the "--language" or "--default-duration" here
 if "%mux%" EQU "y" (
- mkvmerge -o "%videoname%_final.mkv" "%videoname%_fixed.mkv" "--sub-charset" "0:UTF-8" "--language" "0:zxx" "--track-name" "0:" "--default-track" "0:yes" "%scriptname%_fixed.ass" "--attachment-mime-type" "application/vnd.ms-opentype" "--attachment-name" "%font%" "--attach-file" "audio\%font%" "--attachment-mime-type" "application/vnd.ms-opentype" "--attachment-name" "%font2%" "--attach-file" "audio\%font2%"
+ mkvmerge -o "%videoname%_final.mkv" "%videoname%_fixed.mkv" "--sub-charset" "0:UTF-8" "--language" "0:zxx" "--track-name" "0:" "--default-track" "0:yes" "%scriptname%_fixed.ass" "--attachment-mime-type" "application/vnd.ms-opentype" "--attachment-name" "%font%" "--attach-file" "custom\%font%" "--attachment-mime-type" "application/vnd.ms-opentype" "--attachment-name" "%font2%" "--attach-file" "custom\%font2%"
  del "%videoname%_fixed.mkv"
  del "%scriptname%_fixed.ass"
 )
