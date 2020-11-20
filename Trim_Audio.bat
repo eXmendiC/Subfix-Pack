@@ -12,7 +12,7 @@ IF [%1]==[] echo "Drag & Drop the file above it!" && goto end
 REM ######################
 :: Trimming audio
 :: You might want to change the "fps"
-py -3 audio\vfr\vfr.py -i "%~1" -o "%~n1.trimmed.mka" --fps=24000/1001 -vmr trim.txt
+py -3 tools\vfr\vfr.py -i "%~1" -o "%~n1.trimmed.mka" --fps=24000/1001 -vmr trim.txt
 
 :: Deleting everything that isn't needed anymore
 IF EXIST "%~n1.trimmed.mka" (
