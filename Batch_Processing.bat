@@ -20,5 +20,5 @@ SET fast=y
 SET extract=n
 SET videoname=TestTV2.mkv
 SET scriptname=TestTV.ass
-CALL Fix_Subs-23.976fps.bat
+CALL Fix_Subs.bat
 REM #################################
