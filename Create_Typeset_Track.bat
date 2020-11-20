@@ -38,19 +38,19 @@ if /I "%~x1" EQU ".ass" set source=ass
 
 if "%source%" EQU "srt" (
 :: That python script is scaling the subtitles and replacing the font
- py -3 audio\prass\prass.py convert-srt "%scriptname%" --encoding utf-8 | py -3 audio\prass\prass.py copy-styles --resolution 1920x1080 --from audio\%template% -o "%scriptname%_srt.ass"
+ py -3 tools\prass\prass.py convert-srt "%scriptname%" --encoding utf-8 | py -3 tools\prass\prass.py copy-styles --resolution 1920x1080 --from custom\%template% -o "%scriptname%_srt.ass"
  :: That python script is detecting typeset and making it "/an8" (top)
- py -3 audio\amazon-netflix_typeset_split.py "%scriptname%_srt.ass" "%scriptname%_sfx.ass"
+ py -3 tools\amazon-netflix_typeset_split.py "%scriptname%_srt.ass" "%scriptname%_sfx.ass"
  del "%scriptname%_srt.ass"
 )
 
 if "%source%" EQU "ass" (
 :: That python script is and replacing the font
-py -3 audio\prass\prass.py copy-styles --resample --from audio\%template% --to "%scriptname%" -o "%scriptname%_sfx.ass"
+py -3 tools\prass\prass.py copy-styles --resample --from custom\%template% --to "%scriptname%" -o "%scriptname%_sfx.ass"
 )
 
 :: Cleaning the .ass file
-py -3 audio\prass\prass.py cleanup "%scriptname%_sfx.ass" --styles --empty-lines --comments -o "%scriptname%_tmp.ass"
+py -3 tools\prass\prass.py cleanup "%scriptname%_sfx.ass" --styles --empty-lines --comments -o "%scriptname%_tmp.ass"
 del "%scriptname%_sfx.ass"
 :: This step is important for fixing weird border upscaling with players like mpv
 awk.exe "/\[Script Info\]/ { print; print \"ScaledBorderAndShadow: yes\"; next }1" "%scriptname%_tmp.ass" >"%scriptname%_sfx.ass"
@@ -60,12 +60,12 @@ del "%scriptname%_tmp.ass"
 :: That python script is fixing the German typographie (for exmaple: „“ instead of "")
 if "%typo%" EQU "y" (
 ren "%scriptname%_sfx.ass" "%scriptname%_sfx-needfix.ass"
-py -3 audio\fuehre_mich.py "%scriptname%_sfx-needfix.ass" "%scriptname%_sfx.ass"
+py -3 tools\fuehre_mich.py "%scriptname%_sfx-needfix.ass" "%scriptname%_sfx.ass"
 del "%scriptname%_sfx-needfix.ass"
 )
 
 :: Renaming
-py -3 audio\prass\prass.py sort "%scriptname%_sfx.ass" --by style -o "%scriptname%-sorted.ass"
+py -3 tools\prass\prass.py sort "%scriptname%_sfx.ass" --by style -o "%scriptname%-sorted.ass"
 del "%scriptname%_sfx.ass" 
 
 :: Remove everything non-typeset (you might have to change and/or add stuff to it)
@@ -79,7 +79,7 @@ wsl sed -i "/,Flashback,,/d" "%scriptname%-type_tmp.ass"
 wsl sed -i "/,Flashback Internal,,/d" "%scriptname%-type_tmp.ass"
 
 :: Remove everything unused (again)
-py -3 audio\prass\prass.py cleanup "%scriptname%-type_tmp.ass" --styles -o "%scriptname%-type.ZXX.ass"
+py -3 tools\prass\prass.py cleanup "%scriptname%-type_tmp.ass" --styles -o "%scriptname%-type.ZXX.ass"
 del "%scriptname%-type_tmp.ass"
 
 :: Deleting everything that isn't needed anymore
