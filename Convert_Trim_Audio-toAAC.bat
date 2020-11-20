@@ -17,24 +17,24 @@ set track=0
 REM ######################
 
 if "%track%" EQU "0" (
-ffmpeg -i "%~1" -c:a pcm_s24le "%~n1.wav"
+ffmpeg -i "%~1" -c:a pcm_s24le "%~n1-out.wav"
 ) else (
-ffmpeg -i "%~1" -map 0:%track% -c:a pcm_s24le "%~n1.wav"
+ffmpeg -i "%~1" -map 0:%track% -c:a pcm_s24le "%~n1-out.wav"
 )
 
 if "%trim%" EQU "y" (
 :: You might want to change the "fps"
-py -3 audio\vfr\vfr.py -i "%~n1.wav" -o "%~n1.trimmed.mka" --fps=24000/1001 -vmr trim.txt
+py -3 tools\vfr\vfr.py -i "%~n1-out.wav" -o "%~n1.trimmed.mka" --fps=24000/1001 -vmr trim.txt
 )
 
 IF EXIST "%~n1.trimmed.mka" (
 echo Convert again...
-audio\eac3to\eac3to.exe "%~n1.trimmed.mka" "%~n1.meme.wav"
-audio\eac3to\qaac64.exe "%~n1.meme.wav" -V 127 --no-delay --no-optimize --verbose -o "%~n1.trimmed.m4a"
+tools\eac3to\eac3to.exe "%~n1.trimmed.mka" "%~n1.meme.wav"
+tools\eac3to\qaac64.exe "%~n1.meme.wav" -V 127 --no-delay --no-optimize --verbose -o "%~n1.trimmed.m4a"
 echo.
 echo Done.
 ) ELSE (
-audio\eac3to\qaac64.exe "%~n1.wav" -V 127 --no-delay --no-optimize --verbose -o "%~n1.m4a"
+tools\eac3to\qaac64.exe "%~n1-out.wav" -V 127 --no-delay --no-optimize --verbose -o "%~n1.m4a"
 echo.
 echo Done.
 )
@@ -50,9 +50,9 @@ del "%~n1.m4a"
 del "%~n1 - Log.txt"
 del "%~n1.meme - Log.txt"
 del "%~n1.trimmed - Log.txt"
-del "%~n1.wav"
+del "%~n1-out.wav"
 IF EXIST "%~n1.trimmed.mka" (
- del "%~n1.wav"
+ del "%~n1-out.wav"
 ) 
 
 IF EXIST "%~n1.meme.wav" (
@@ -64,7 +64,7 @@ IF EXIST "%~n1.trimmed.m4a" (
 ) 
 
 IF EXIST "%~n1.m4a" (
- del "%~n1.wav"
+ del "%~n1-out.wav"
 ) 
 :end
 PAUSE
