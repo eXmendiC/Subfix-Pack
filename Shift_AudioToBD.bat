@@ -24,12 +24,12 @@ echo.
 ffmpeg -i "%want_sync%" -vn -acodec copy "%want_sync%_temp.mka"
 ffmpeg -i "%want_sync%" "%want_sync%.wav"
 ffmpeg -i "%is_sync%" "%is_sync%.wav"
-move /Y "%want_sync%_temp.mka" audio\sync-audio-tracks
-move /Y "%want_sync%.wav" audio\sync-audio-tracks
-move /Y "%is_sync%.wav" audio\sync-audio-tracks
+move /Y "%want_sync%_temp.mka" tools\sync-audio-tracks
+move /Y "%want_sync%.wav" tools\sync-audio-tracks
+move /Y "%is_sync%.wav" tools\sync-audio-tracks
 
 :: Generate offset, convert seconds to milliseconds and store them in a text file
-cd audio\sync-audio-tracks
+cd tools\sync-audio-tracks
 wsl want_sync=$(sed "s/[[:space:]]//g" ^<^<^< "%want_sync%.wav") ; mv "%want_sync%.wav" $want_sync
 wsl is_sync=$(sed "s/[[:space:]]//g" ^<^<^< "%is_sync%.wav") ; mv "%is_sync%.wav" $is_sync
 wsl want_sync=$(sed "s/[[:space:]]//g" ^<^<^< "%want_sync%.wav") ; is_sync=$(sed "s/[[:space:]]//g" ^<^<^< "%is_sync%.wav") ; offset=$(bash -i compute-sound-offset.sh "$want_sync" "$is_sync" 0) ; offset=$(awk "BEGIN {print ($offset*1000)}") ; offset=$(sed "s/\.[^.]*$//" ^<^<^< "$offset") ; echo "$offset" >> "%is_sync%".txt
