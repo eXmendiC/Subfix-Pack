@@ -9,7 +9,7 @@ echo Just press enter for detault values.
 echo Always use lowercase.
 echo.
 REM ######################
-:: Explanation & Requirements: https://iamscum.wordpress.com/guides/vfr/
+:: Explanation & Requirements: https://iamscum.wordpress.com/guides/audio/
 REM ######################
 :: Change this values to your liking
 set replace=n
