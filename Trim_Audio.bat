@@ -6,7 +6,7 @@ echo.
 echo Keep all files and this batch file in the same folder. 
 echo.
 REM ######################
-:: Explanation: https://iamscum.wordpress.com/guides/vfr/
+:: Explanation: https://iamscum.wordpress.com/guides/audio/
 REM ######################
 IF [%1]==[] echo "Drag & Drop the file above it!" && goto end
 REM ######################
