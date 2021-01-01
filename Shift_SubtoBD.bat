@@ -22,6 +22,7 @@ set font2=font1i.ttf
 REM ######################
 
 :anew
+echo Avoid special characters like bracket!
 set /p srcname=TV-Source (e.g. TestTV.mkv): 
 set scriptname=%srcname%
 echo Leave empty when the subs are already muxed as a .ass and primary subtitle track with the TV version
