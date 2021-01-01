@@ -39,6 +39,7 @@ if "%extract%" EQU "y" (
  goto TTT
 )
 
+echo Avoid special characters like bracket!
 set /p videoname=Video (e.g. Test.mkv): 
 set /p scriptname=Subtitle (e.g. Test.ass / Test.srt): 
 
