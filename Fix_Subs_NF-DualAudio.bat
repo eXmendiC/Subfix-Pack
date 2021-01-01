@@ -36,6 +36,7 @@ if "%extract%" EQU "y" (
  goto TTT
 )
 
+echo Avoid special characters like bracket!
 set /p videoname=Video with japdub and other dubbed track (e.g. Test.mkv): 
 set /p scriptname=Type-Subtitle (e.g. Test.srt): 
 set /p scriptnamenew=Full-Subtitle (e.g. Test.srt): 
