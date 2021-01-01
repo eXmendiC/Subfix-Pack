@@ -142,7 +142,7 @@ if "%shifting%" EQU "-24" (
 )
 
 :: Cleaning the .ass file
-py -3 audio\prass\prass.py cleanup "%scriptname%_tmp.ass" --styles --empty-lines --comments -o "%scriptname%_tmp2.ass"
+py -3 tools\prass\prass.py cleanup "%scriptname%_tmp.ass" --styles --empty-lines --comments -o "%scriptname%_tmp2.ass"
 del "%scriptname%_tmp.ass"
 ren "%scriptname%_tmp2.ass" "%scriptname%_tmp.ass"
 
