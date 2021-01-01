@@ -24,6 +24,7 @@ set font=font1.ttf
 set font2=font1i.ttf
 REM ######################
 
+echo Avoid special characters like bracket!
 set /p videoname=Video (e.g. Test.mkv): 
 set /p videoname_hevc=Video (e.g. Test2.mkv): 
 set /p scriptname=GER-Subtitle (e.g. Test_de-de.srt): 
