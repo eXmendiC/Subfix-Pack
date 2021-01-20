@@ -1,6 +1,7 @@
 @echo off
 :: This script is for creating a typeset track of a full subbed subtitle
 :: Keep in mind that the script isn't 100% accurate and might think some dialogues are typeset
+:: You've to add the non-typeset styling names (see below)
 :: It's more optimised for going safe instead of deleting real typeset by accident
 REM ######################
 setlocal ENABLEDELAYEDEXPANSION
@@ -68,7 +69,8 @@ del "%scriptname%_sfx-needfix.ass"
 py -3 tools\prass\prass.py sort "%scriptname%_sfx.ass" --by style -o "%scriptname%-sorted.ass"
 del "%scriptname%_sfx.ass" 
 
-:: Remove everything non-typeset (you might have to change and/or add stuff to it)
+:: Remove everything non-typeset
+:: You have to change and/or add stuff to it!
 ren "%scriptname%-sorted.ass" "%scriptname%-type_tmp.ass"
 wsl sed -i "/,Default,,/d" "%scriptname%-type_tmp.ass"
 wsl sed -i "/,Overlap,,/d" "%scriptname%-type_tmp.ass"
