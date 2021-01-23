@@ -1,7 +1,7 @@
 @echo off
-:: This script is for easy batch processing.
-:: Below are some examples.
-:: You have to comment out all "set /p" in the called scripts to make it work silent!
+:: This script is an example for easy batch processing.
+:: Depending on the called batch file, you've to add/remove "SET" values below.
+:: You have to comment out all "set /p" and "PAUSE" in the called scripts to make it work silent.
 REM #################################
 SET srcname=TestTV.mkv
 SET dstname=TestBD.mkv
