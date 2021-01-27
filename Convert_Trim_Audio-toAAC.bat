@@ -29,7 +29,7 @@ py -3 tools\vfr\vfr.py -i "%~n1-out.wav" -o "%~n1.trimmed.mka" --fps=24000/1001 
 
 IF EXIST "%~n1.trimmed.mka" (
 echo Convert again...
-tools\eac3to\eac3to.exe "%~n1.trimmed.mka" "%~n1.meme.wav"
+ffmpeg -i "%~n1.trimmed.mka" -c:a pcm_s24le "%~n1.meme.wav"
 tools\eac3to\qaac64.exe "%~n1.meme.wav" -V 127 --no-delay --no-optimize --verbose -o "%~n1.trimmed.m4a"
 echo.
 echo Done.
