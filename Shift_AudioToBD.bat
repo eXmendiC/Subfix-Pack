@@ -13,6 +13,7 @@ REM ######################
 REM ######################
 :: Change this values to your liking
 set replace=n
+set add=n
 REM ######################
 
 :anew
@@ -49,7 +50,14 @@ cd ..\..
 
 :: Audio replacing
 if "%replace%" EQU "y" (
-mkvmerge.exe --ui-language en --output "[NEW] %is_sync%" --no-audio  "(" "%is_sync%" ")"  --language "1:jpn" "(" "%is_sync% [%delay%ms].mka" ")"
+mkvmerge.exe -o "[NEW] %is_sync%" "--no-audio"  "(" "%is_sync%" ")"  "--language" "1:jpn" "(" "%is_sync% [%delay%ms].mka" ")"
 del "%is_sync% [%delay%ms].mka"
 )
+
+:: Audio adding
+if "%add%" EQU "y" (
+mkvmerge.exe -o "[NEW] %is_sync%" "(" "%is_sync%" ")"  "--default-track" "0:yes" "--language" "0:ger" "(" "%is_sync% [%delay%ms].mka" ")"
+del "%is_sync% [%delay%ms].mka"
+)
+
 PAUSE
