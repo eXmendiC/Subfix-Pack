@@ -170,12 +170,16 @@ if "%timefixing%" EQU "y" (
   ffmpeg -i "%videoname%_fixed.mkv" -f yuv4mpegpipe -vf scale=640:360 -pix_fmt yuv420p -vsync drop - | SCXvid "%videoname%_fixed.mkv_keyframes.txt"
   echo Keyframes completed.
   )
+ if "%timefixingmode%" EQU "0" (
+  py -3 tools\prass\prass.py tpp "%scriptname%_tmp.ass" --lead-in 42 --lead-out 42 --gap 210 --overlap 126 --bias 80 --keyframes "%videoname%_fixed.mkv_keyframes.txt" --fps 23.976 --kf-before-start 126 --kf-before-end 168 --kf-after-start 126 --kf-after-end 168 -o "%scriptname%_fixed.ass"
+  del "%scriptname%_tmp.ass"
+ )
  if "%timefixingmode%" EQU "1" (
-  py -3 tools\prass\prass.py tpp "%scriptname%_tmp.ass" --lead-in 42 --lead-out 42 --gap 210 --overlap 126 --bias 50 --keyframes "%videoname%_fixed.mkv_keyframes.txt" --fps 23.976 --kf-before-start 210 --kf-before-end 252 --kf-after-start 210 --kf-after-end 252 -o "%scriptname%_fixed.ass"
+  py -3 tools\prass\prass.py tpp "%scriptname%_tmp.ass" --lead-in 42 --lead-out 42 --gap 210 --overlap 126 --bias 80 --keyframes "%videoname%_fixed.mkv_keyframes.txt" --fps 23.976 --kf-before-start 210 --kf-before-end 252 --kf-after-start 210 --kf-after-end 252 -o "%scriptname%_fixed.ass"
   del "%scriptname%_tmp.ass"
  )
  if "%timefixingmode%" EQU "2" (
-  py -3 tools\prass\prass.py tpp "%scriptname%_tmp.ass" --lead-in 42 --lead-out 42 --gap 336 --overlap 210 --bias 60 --keyframes "%videoname%_fixed.mkv_keyframes.txt" --fps 23.976 --kf-before-start 252 --kf-before-end 294 --kf-after-start 252 --kf-after-end 294 -o "%scriptname%_fixed.ass"
+  py -3 tools\prass\prass.py tpp "%scriptname%_tmp.ass" --lead-in 42 --lead-out 42 --gap 336 --overlap 210 --bias 80 --keyframes "%videoname%_fixed.mkv_keyframes.txt" --fps 23.976 --kf-before-start 252 --kf-before-end 294 --kf-after-start 252 --kf-after-end 294 -o "%scriptname%_fixed.ass"
   del "%scriptname%_tmp.ass"
  )
  if "%timefixingmode%" EQU "3" (
