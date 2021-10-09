@@ -17,11 +17,13 @@ REM set /p delay=Audiodelay in ms (Default: 0):
 for /F "delims=" %%I in ('ffprobe -v error -select_streams a:0 -show_entries stream^=codec_name -of default^=noprint_wrappers^=1:nokey^=1 "%audioname%"') do set "acodec=%%I"
 for /F "delims=" %%I in ('ffprobe -v error -select_streams a:0 -show_entries stream^=codec_name -of default^=noprint_wrappers^=1:nokey^=1 "%videoname%"') do set "oldcodec=%%I"
 
+set acodec=unknown
 if "%acodec%" EQU "ac3" (set acodec=AC3)
 if "%acodec%" EQU "eac3" (set acodec=E-AC3)
 if "%acodec%" EQU "aac" (set acodec=AAC)
 if "%acodec%" EQU "flac" (set acodec=FLAC)
 
+set oldcodec=unknown
 if "%oldcodec%" EQU "ac3" (set oldcodec=AC3)
 if "%oldcodec%" EQU "eac3" (set oldcodec=E-AC3)
 if "%oldcodec%" EQU "aac" (set oldcodec=AAC)
